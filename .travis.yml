@@ -1,0 +1,18 @@
+language: node_js
+node_js: stable
+branches:
+  only:
+  - hexo
+install:
+- npm i
+- npm install hexo-deployer-git --save
+script:
+- hexo clean
+- hexo generate
+after_script:
+- git config user.name "recursively"
+- git config user.email "reindeer.zyh@gmail.com"
+
+- sed -i "s/gh_token/${REPO_TOKEN}/g" ./_config.yml
+- hexo deploy
+
