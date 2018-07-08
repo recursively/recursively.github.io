@@ -79,6 +79,7 @@ theme: Next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   - type: git
-    repo: https://recursively:gh_token@github.com/recursively/recursively.github.io.git
+    # repo: https://recursively:gh_token@github.com/recursively/recursively.github.io.git
+    repo: https://recursively@github.com/recursively/recursively.github.io.git
     branch: master
     message: "Travis CI Auto Builder"
