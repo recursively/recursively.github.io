@@ -29,7 +29,10 @@ https://api.etherscan.io/api?module=proxy&action=eth_getTransactionReceipt&txhas
 Get sourcecode:
 https://api.etherscan.io/api?module=contract&action=getsourcecode&address=0xc368A8E22e09CEA6e0Ca160309d94B792729892d&apikey=YourApiKeyToken
 
-I used the getsourcecode api to get the verified contract. If the contract is not verified, this api will not work.
+I used the getsourcecode api to get the verified contract. If the contract is not verified, this api will not work. Finally, you can check the states of your API from Etherscan.io:
+
+![](http://i38.photobucket.com/albums/e117/bucketuser111/Blog/apistat_zpsq97mf7uu.png)
+
 ## Separate the Blocks into Slices
 
 The whole Ethereum blockchain contains over 5000,000 blocks, you'd better not get all of them into your computer memory. It's not complicated to solve it, you just need to separate the blocks into slices.
