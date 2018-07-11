@@ -114,6 +114,12 @@ use admin //switch to admin database
 db.createUser({user:'root', pwd: 'password', roles: ['root']}) //create an administrator
 ```
 
+If you want to change your user's password later, you can use the changeUserPassword command:
+
+```shell
+db.changeUserPassword('root','password1')
+```
+
 Then you should start mongod with argument '--auth':
 
 ```shell
