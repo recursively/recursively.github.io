@@ -1,5 +1,5 @@
 ---
-title: Scratch-Smart-Contract-Source-Code
+title: Scrape Smart Contract Sourcecode
 date: 2018-07-09 11:39:39
 categories:
 tags:
@@ -7,7 +7,7 @@ description: Some ideas about scraping Ethereum smart contract sourcecode from t
 ---
 ## The Method to Scrape the Ethereum Blockchain
 
-The simplest way is to get all of the blocks from Etherscan.io and can save much of my local space. I've tried to scrape all of the transactions from Etherscan.io, but my IP was banned after a few of trials. So I have to synchronize the whole node of Ethereum blockchain into my local machine. My purpose is to grab the source code of the smart contract, but it's not feasible to get the source code from the bytecode itself. (Refer this question: https://ethereum.stackexchange.com/questions/26648/how-to-find-solidity-code-for-a-contract-address)
+The simplest way is to get all of the blocks from Etherscan.io and can save much of my local space. I've tried to scrape all of the transactions from Etherscan.io, but my IP was banned after a few of trials. So I have to synchronize the whole node of Ethereum blockchain into my local machine. My purpose is to grab the sourcecode of the smart contract, but it's not feasible to get the sourcecode from the bytecode itself. (Refer this question: https://ethereum.stackexchange.com/questions/26648/how-to-find-solidity-code-for-a-contract-address)
 
 ## Get Information By web3
 
@@ -26,7 +26,7 @@ There are some useful APIs, for example:
 Get transaction receipt:
 https://api.etherscan.io/api?module=proxy&action=eth_getTransactionReceipt&txhash=0x6ed68687dc6ccc5ecd17a4842c260aab1de356fdbf2d3d7ef5f8c95f5f0d2035&apikey=YourApiKeyToken
 
-Get source code:
+Get sourcecode:
 https://api.etherscan.io/api?module=contract&action=getsourcecode&address=0xc368A8E22e09CEA6e0Ca160309d94B792729892d&apikey=YourApiKeyToken
 
 I used the getsourcecode api to get the verified contract. If the contract is not verified, this api will not work.
