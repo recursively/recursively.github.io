@@ -11,11 +11,11 @@ The simplest way is to get all of the blocks from Etherscan.io and can save much
 
 ## Get Information By web3
 
-I used the web3.eth.getCode() method to identify whether an address is a contract or not. At first, I synchronize the whole node by adding argument --fast, and I cannot get the bytecode with web3.eth.getCode(). Maybe something was missing in this way of sync. So I deleted the database and added the argument --syncmode:
+I used the web3.eth.getCode() method to identify whether an address is a contract or not. At first, I synchronized the whole node by adding argument --fast, and I cannot get the bytecode with web3.eth.getCode(). Maybe something was missing in this way of sync. So I deleted the database and added the argument --syncmode:
 ```shell
 geth --rpc --rpcaddr=127.0.0.1 --syncmode=full
 ```
-Then everything works well.
+Then everything works well. If you don't want to sync the node into your local disk, you can also choose the public geth node like [infura](https://infura.io/) to use. 
 
 ## Use the Etherscan APIs
 
