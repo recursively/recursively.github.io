@@ -3,7 +3,7 @@ title: Scrape Smart Contract Sourcecode
 date: 2018-07-09 11:39:39
 categories: Blockchain
 tags: [Python, Ethereum]
-description: Some ideas about scraping Ethereum smart contract sourcecode from the mainnet of Ethereum blockchain. Make sure you have at least 1 month to synchronize the complete blockchain node. :) (https://github.com/recursively/ContractSpider [![Build Status](https://travis-ci.org/recursively/ContractSpider.svg?branch=master)](https://travis-ci.org/recursively/ContractSpider))
+description: Some ideas about scraping Ethereum smart contract sourcecode from the mainnet of Ethereum blockchain. Make sure you have at least 1 month to synchronize the complete blockchain node. :) (https://github.com/recursively/ContractSpider)
 ---
 ## The Method to Scrape the Ethereum Blockchain
 
