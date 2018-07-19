@@ -317,11 +317,20 @@
         </div>
       {% endif %}
 
+      {#{% if is_index %}#}
+      {#{% if post.images %}#}
+    	{#<div class="out-img-topic">#}
+          {#<img src={{ post.images }} class="img-topic">#}
+    	{#</div>#}
+
       {% if is_index %}
       {% if post.images %}
-    	<div class="out-img-topic">
-          <img src={{ post.images }} class="img-topic">
-    	</div>
+      <div class="out-img-topic">
+          {% for image in post.images %}
+            <img src="{{ image }}" class="img-topic">
+          {% endfor %}
+      </div>
+
       {% endif %}
         {% if post.description and theme.excerpt_description %}
           {{ post.description }}

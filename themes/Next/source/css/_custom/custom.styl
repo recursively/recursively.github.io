@@ -69,18 +69,24 @@
 }
 
 //图片外部的容器方框
-//.out-img-topic {
-//  display: block;
-//  max-height:300px;
-//  margin-bottom: 24px;
-//  overflow: hidden;
-//}
+.out-img-topic {
+  display: block;
+  max-height:300px;
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
 //图片
 img.img-topic {
-  display: block ;
+  display: inline-block;
   margin-left: .7em;
   margin-right: .7em;
   padding: 0;
-  float: right;
+  float: none;
   clear: right;
+}
+
+.posts-expand .post-body img {
+  border: 0;
+  margin: 0 auto 0;
 }
