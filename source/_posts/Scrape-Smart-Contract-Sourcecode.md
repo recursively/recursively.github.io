@@ -7,7 +7,7 @@ description: Some ideas about scraping Ethereum smart contract sourcecode from t
 images: ["https://img.shields.io/badge/python-3.6-blue.svg", "https://travis-ci.org/recursively/ContractSpider.svg?branch=master", "https://codecov.io/gh/recursively/ContractSpider/branch/master/graph/badge.svg"]
 ---
 ## The Method to Scrape the Ethereum Blockchain
-![](https://travis-ci.org/recursively/ContractSpider.svg?branch=master)
+
 The simplest way is to get all of the blocks from Etherscan.io and can save much of my local space. I've tried to scrape all of the transactions from Etherscan.io, but my IP was banned after a few of trials. So I have to synchronize the whole node of Ethereum blockchain into my local machine. My purpose is to grab the sourcecode of the smart contract, but it's not feasible to get the sourcecode from the bytecode itself. (Refer this question: https://ethereum.stackexchange.com/questions/26648/how-to-find-solidity-code-for-a-contract-address)
 
 ## Get Information By web3
