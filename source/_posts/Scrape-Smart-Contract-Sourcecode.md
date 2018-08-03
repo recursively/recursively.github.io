@@ -16,7 +16,7 @@ I used the web3.eth.getCode() method to identify whether an address is a contrac
 ```shell
 geth --rpc --rpcaddr=127.0.0.1 --syncmode=full
 ```
-Then everything works well. If you don't want to sync the node into your local disk, you can also choose the public geth node like [infura](https://infura.io/) to use. 
+Then everything works well. If you don't want to sync the node into your local disk, you can also choose the public geth node like [infura](https://infura.io/) to use. In addition to the large usage of disk, the sync process will get extremely slower from block #2283397 to #2700031 because of the denial of service attack on 2016/09/18. (https://github.com/ethereumbook/ethereumbook/blob/develop/clients.asciidoc)
 
 ## Use the Etherscan APIs
 
