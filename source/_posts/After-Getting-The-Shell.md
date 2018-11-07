@@ -79,14 +79,19 @@ There are some ways to help you to go deep and you can treat your victim as a pi
 
 Firstly try to add the routing rules of the target to your meterpreter shell. An msf built-in module "autoroute" and is convenient. (https://www.offensive-security.com/metasploit-unleashed/proxytunnels/)
 
+![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/1-1.png)
+
 ```shell
 meterpreter > run post/multi/manage/autoroute
 ```
+![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/1-2.png)
+
 You can enumerate hosts by performing an ARP scan:
 
 ```shell
 meterpreter > run post/windows/gather/arp_scanner rhosts=192.168.5.1/24
 ```
+![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/1-3.png)
 
 Adding routing rule is not always working well, you can try the socks4a module in meterpreter:
 
@@ -95,6 +100,7 @@ use anxiliary/server/socks4a
 set srvport 1080
 run
 ```
+![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/1-4.png)
 
 If it's Linux in your local machine, you can use proxychains to set the socks5 proxy.
 Getting proxychains installed:
