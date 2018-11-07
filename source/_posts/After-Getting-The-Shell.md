@@ -101,7 +101,7 @@ Then you can use socks proxy to scan the victim's intranet:
 ```shell
 proxychains4 nmap -sT -Pn -open 192.168.100.1/22
 ```
-The command above is from the Internet and I'm so confused about it. I have tried so many times to find out all the machines in the victim's intranet but I was always failed. I'm figuring out the proposal for this problem.
+I have tried so many times to find out all the machines in the victim's intranet but I was usually failed. It just works for few times and the process is too slow.
 
 You can also use the msf built-in module to scan:
 ```shell
