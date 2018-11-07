@@ -139,5 +139,5 @@ The argument -d is the IP address of your VPS.
 Finally, the attacker can access services in the intranet by setting socks5 proxy in his browser or use proxychains.
 
 
-![](https://github.com/recursively/recursively.github.io/blob/hexo/source/pics/map.jpg)
+![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/map.jpg)
 
