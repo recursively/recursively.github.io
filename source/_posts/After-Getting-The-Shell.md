@@ -3,7 +3,7 @@ title: After Getting The Shell
 date: 2018-11-02 11:55:13
 categories: Hacking
 tags: [PowerShell, Metasploit]
-description: It seems that it's getting more and more popular that everyone would like to scan the whole intranet when he takes down one of the other people's machines. So what to do next after getting the shell of a windows system? Some ideas about that. 
+description: It seems that it's getting more and more popular that everyone would like to perform a scan of the whole intranet when he takes down one of the other people's machines. So what to do next after getting the shell of a windows system? Some ideas about that. 
 ---
 
 Here gives two methods to trigger a windows reverse shell with PowerShell, remember to bypass the PowerShell security policy before you execute PowerShell command. (https://blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/)
