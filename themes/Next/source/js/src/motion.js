@@ -77,7 +77,7 @@ $(document).ready(function() {
   sidebarToggleLines.push(sidebarToggleLine2nd);
   sidebarToggleLines.push(sidebarToggleLine3rd);
 
-  var SIDEBAR_WIDTH = '320px';
+  var SIDEBAR_WIDTH = CONFIG.sidebar.width ? CONFIG.sidebar.width : '320px';
   var SIDEBAR_DISPLAY_DURATION = 200;
   var xPos, yPos;
 
@@ -174,7 +174,7 @@ $(document).ready(function() {
       this.sidebarEl.trigger('sidebar.isHiding');
 
       // Prevent adding TOC to Overview if Overview was selected when close & open sidebar.
-      if (!$('.post-toc-wrap')) {
+      if ($('.post-toc-wrap')) {
         if ($('.site-overview-wrap').css('display') === 'block') {
           $('.post-toc-wrap').removeClass('motion-element');
         } else {
