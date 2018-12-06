@@ -77,12 +77,7 @@ pagination_dir: page
 ## Themes: https://hexo.io/themes/
 theme: Next
 
-feed:
-    type: rss2
-    path: rss.xml
-    limit: 5
-    hub:
-    content: 'true'
+rss: /rss.xml
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
