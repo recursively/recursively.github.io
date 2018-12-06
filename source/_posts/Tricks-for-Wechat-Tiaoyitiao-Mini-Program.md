@@ -10,7 +10,7 @@ date: 2018-05-11 16:32:36
 ---
 ## How does it act?
 
-![](http://localhost:8000/IMG_2723.GIF)
+![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/IMG_2723.GIF)
 
 ## Distinguish the Screenshot
 
