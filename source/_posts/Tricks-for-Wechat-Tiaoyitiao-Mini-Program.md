@@ -101,7 +101,7 @@ void loop() {
 
 ## Control the Arduino Serial
 
-In order to control the Arduino serial input value, we can use the serial monitor embedded in the Arduino IDE. And we can also use python to Implement the same function, but we must maintain the serial monitor open.
+In order to control the Arduino serial input value, we can use the serial monitor embedded in the Arduino IDE. And we can also use python to Implement the same functionality.
 
 ```python
 #!/usr/bin/env python  
@@ -156,4 +156,4 @@ if __name__ == '__main__':
 
 ## Combine the Codes
 
-The last step is combining the picture distinguishing code and the serial controlling code. I've run the code with python3.6 and the whole process went well.
+The last step is combining the picture distinguishing code and the serial controlling code. I've run the code with python3.6 and the whole process performed well.
