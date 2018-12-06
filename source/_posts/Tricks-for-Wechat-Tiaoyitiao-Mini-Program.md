@@ -8,6 +8,10 @@ description: >-
   proposal, I added the Arduino module to imitate the behaviors of the human.
 date: 2018-05-11 16:32:36
 ---
+## How does it act?
+
+![](http://localhost:8000/IMG_2723.GIF)
+
 ## Distinguish the Screenshot
 
 First of all, we need to work out the program to distinguish the chess piece and board, furthermore, finding the distance between the chess piece and the target position and calculating the pressing time. It's definitely a complicated process. I used the open-source project https://github.com/wangshub/wechat_jump_game. We should connect the mobile phone to the computer with USB and make sure that we have installed android adb debug command so that the mobile phone can take screenshots via the program for the next manipulation.
