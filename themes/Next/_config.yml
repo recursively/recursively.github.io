@@ -144,6 +144,7 @@ menu:
   #schedule: /schedule/ || calendar
   #sitemap: /sitemap.xml || sitemap
   #commonweal: /404/ || heartbeat
+  View: /globe/ || eye
 
 # Enable/Disable menu icons / item badges.
 menu_settings:
