@@ -8,6 +8,10 @@ description: >-
   proposal, I added the Arduino module to imitate the behaviors of the human.
 date: 2018-05-11 16:32:36
 ---
+## How does it act?
+
+![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/IMG_2723.GIF)
+
 ## Distinguish the Screenshot
 
 First of all, we need to work out the program to distinguish the chess piece and board, furthermore, finding the distance between the chess piece and the target position and calculating the pressing time. It's definitely a complicated process. I used the open-source project https://github.com/wangshub/wechat_jump_game. We should connect the mobile phone to the computer with USB and make sure that we have installed android adb debug command so that the mobile phone can take screenshots via the program for the next manipulation.
@@ -97,7 +101,7 @@ void loop() {
 
 ## Control the Arduino Serial
 
-In order to control the Arduino serial input value, we can use the serial monitor embedded in the Arduino IDE. And we can also use python to Implement the same function, but we must maintain the serial monitor open.
+In order to control the Arduino serial input value, we can use the serial monitor embedded in the Arduino IDE. And we can also use python to Implement the same functionality.
 
 ```python
 #!/usr/bin/env python  
@@ -152,4 +156,4 @@ if __name__ == '__main__':
 
 ## Combine the Codes
 
-The last step is combining the picture distinguishing code and the serial controlling code. I've run the code with python3.6 and the whole process went well.
+The last step is combining the picture distinguishing code and the serial controlling code. I've run the code with python3.6 and the whole process performed well.
