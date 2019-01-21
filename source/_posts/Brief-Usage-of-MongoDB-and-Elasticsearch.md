@@ -6,7 +6,7 @@ tags:
   - Mongodb
   - Elasticsearch
 description: >-
-  The purpose of this post is to write down the common usage of MongoDB in my daily work. In addition, some manipulations for Elasticsearch is useful under several situations.
+  The purpose of this post is to write down the common usage of MongoDB in my daily work. In addition, some manipulations for Elasticsearch are useful under several situations.
 
 date: 2018-07-03 15:36:24
 ---
