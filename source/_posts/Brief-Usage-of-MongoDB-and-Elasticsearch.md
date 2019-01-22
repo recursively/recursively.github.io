@@ -59,7 +59,7 @@ If you want to login into mongo console, you must provide your username and pass
 mongo admin -u root -p password
 ```
 
-Export data to csv:
+Export data to csv(https://docs.mongodb.com/manual/reference/program/mongoexport/):
 ```shell
 mongoexport --username xxx --password xxx --authenticationDatabase admin --db xxx --collection xxx --type csv --fields xxx,xxx --out .../output.csv
 ```
