@@ -59,6 +59,11 @@ If you want to login into mongo console, you must provide your username and pass
 mongo admin -u root -p password
 ```
 
+Export data to csv:
+```shell
+mongoexport --username xxx --password xxx --authenticationDatabase admin --db xxx --collection xxx --type csv --fields xxx,xxx --out .../output.csv
+```
+
 ## Export MongoDB Database Into Elasticsearch
 
 There are some useful tools to finish this job such as mongo-connector, transporter, etc. But I met some problems when I use mongo-connector and I speculate it's the incompatibility of versions between mongo-connector and Elasticsearch. So I chose transporter which is an open source and high-efficiency tool built with go.
