@@ -1,6 +1,6 @@
 ---
 title: The Experiment of Tweak for iOS
-date: 2019-03-06 20:34:02
+date: 2018-11-20 20:34:02
 categories: Reverse Engineering
 tags: [iOS, Theos]
 description: Thanks to the release of Unc0ver suite which allows jailbreak on iOS11 and even on iOS12. I have the opportunity to try out the experiment of tweak on the iOS11 device. It's not complicated as I expected and meanwhile, interesting.
