@@ -40,6 +40,8 @@ When you see the output of "Done.", there will be 4 files generated under your w
 ```shell
 Makefile    commonproject.plist    Tweak.xm    control
 ```
+
+### Modify Files As You Need
 _Makefile_ is generally used in most projects to get everything done properly. In our project, it used to point out files, libraries and frameworks we need.
 ```shell
 THEOS_DEVICE_IP = 10.1.2.34
@@ -91,6 +93,7 @@ The *.plist file contains the configuration of your package.
 ```shell
 { Filter = { Bundles = ( "com.apple.springboard" ); }; }
 ```
+### Install Your Package
 Next, we need to install our package onto the iOS device with directive _make package install_ remotely through the ssh. But firstly, you should have installed OpenSSH. You need to input your password of ssh twice during the installation process. If no errors prompt out you can respring your iOS device and easily see the result I've shown above.
 
 ## Sources
