@@ -92,7 +92,7 @@ Open the BurpSuite listeners:
 
 ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/4-10.png)
 
-All that network traffic can be sent directly or through a proxy like mitmproxy(https://github.com/mitmproxy/mitmproxy) listened at port 9010, if you would like to make some changes to the packet.
+All that network traffic can be sent directly or through a proxy like mitmproxy(https://github.com/mitmproxy/mitmproxy) listened at port 9010, it's necessary if you would like to make some changes to the packets.
 
 ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/4-11.png)
 
