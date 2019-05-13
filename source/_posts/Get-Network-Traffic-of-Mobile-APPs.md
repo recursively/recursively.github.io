@@ -29,7 +29,7 @@ adb install ./JustTrustMe.apk
 ```
 You can now find that JustTrustMe exists in your Xposed modules.
 
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/4-1.png)
+![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/4-2.png)
 
 - ### Setting Up Your Own DNS Server
 
