@@ -8,7 +8,7 @@ images: ["https://img.shields.io/badge/python-3.6-blue.svg", "https://travis-ci.
 ---
 ## The Method to Crawl the Ethereum Blockchain
 
-The simplest way is to get all of the blocks from Etherscan.io and can save much of my local space. I've tried to scrape all of the transactions from Etherscan.io, but my IP was banned after a few of trials. So I have to synchronize the whole node of Ethereum blockchain into my local machine. My purpose is to grab the sourcecode of the smart contract, but it's not feasible to get the sourcecode from the bytecode itself. (Refer this question: https://ethereum.stackexchange.com/questions/26648/how-to-find-solidity-code-for-a-contract-address)
+The simplest way is to get all of the blocks from Etherscan.io and can save much of my local space. I've tried to grab all of the transactions from Etherscan.io, but my IP was banned after a few of trials. So I have to synchronize the whole node of Ethereum blockchain into my local machine. My purpose is to grab the sourcecode of the smart contract, but it's not feasible to get the sourcecode from the bytecode itself. (Refer this question: https://ethereum.stackexchange.com/questions/26648/how-to-find-solidity-code-for-a-contract-address)
 
 ## Get Information By web3
 
@@ -59,4 +59,4 @@ def spider(blocklist):
 
 ## Something Tricky
 
-I wanted to add the multiprocessing module to accelerate the scraping process, but I failed because of some strange reasons on Mac. Finally, I used the threading module to achieve that, but the result doesn't meet my expectations.
+I wanted to add the multiprocessing module to accelerate the crawling process, but I failed because of some strange reasons on Mac. Finally, I used the threading module to achieve that, but the result doesn't meet my expectations.
