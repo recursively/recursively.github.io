@@ -20,7 +20,7 @@ void Test(void)
     printf(str);
 }
 ```
-If we directly test this program it will be aborted by throwing an exception. As we all know, the arguments are passed to functions by value in C/C++. So it's clear that the pointer _str_ passed into the function _GetMemory_ is a copy of real _str_. We can fix this program by using a double pointer.
+If we directly test this program it will be aborted by throwing an exception. As we all know, the arguments are passed to functions by value in C/C++. So it's clear that the pointer *str* passed into the function *GetMemory* is a copy of real *str*. We can fix this program by using a double pointer.
 ```C
 void GetMemory(char **p)
 {
@@ -333,7 +333,7 @@ int main(void)
     return 0;
     }
 ```
-I paste the code of function _createTeacher2_ below and here comes the question, can we just simply replace the function _createTeacher_ to _createTeacher2_?
+I paste the code of function *createTeacher2* below and here comes the question, can we just simply replace the function *createTeacher* to *createTeacher2*?
 ```C
 int createTeacher2(Teacher *p, int n1, int n2)
     {
@@ -370,15 +370,15 @@ int createTeacher2(Teacher *p, int n1, int n2)
     return true;
     }
 ```
-Modify the code in _main()_:
+Modify the code in *main()*:
 ```C
 ret = createTeacher2(p, n1, n2);
 ```
-This code can be correctly compiled and if we run the program we will get stuck in the step of _initTeacher_. Because the pointer _p_ passed to _createTeacher2_ wasn't allocated memory due to the pass-by-value feature. In other words, the pointer _p_ in the _main()_ block will always point to NULL. 
+This code can be correctly compiled and if we run the program we will get stuck in the step of *initTeacher*. Because the pointer *p* passed to *createTeacher2* wasn't allocated memory due to the pass-by-value feature. In other words, the pointer *p* in the *main()* block will always point to NULL. 
 
 ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/5-2.png)
 
-To fix it, we should use the double pointer to pass the address of pointer _p_.
+To fix it, we should use the double pointer to pass the address of pointer *p*.
 
 There is another example we should take care of. Here is an implement of a binary search tree.
 ```C
@@ -730,11 +730,11 @@ int main()
 	return 0;
 }
 ```
-Now let's focus on the first while loop among the _main()_ block. In this case, the pointer _tree_ was directly passed into the function _bstree\_insert_, it's kind of odd compared with the previous instances. The difference is that the pointer _tree_ has been allocated memory before passed as an argument. 
+Now let's focus on the first while loop among the *main()* block. In this case, the pointer *tree* was directly passed into the function *bstree_insert*, it's kind of odd compared with the previous instances. The difference is that the pointer *tree* has been allocated memory before passed as an argument. 
 
 ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/5-3.png)
 
-There are actually two pointers which belong to two different address in the memory, but both of them point to the same space. If we change the value of the space one pointer points to, we simultaneously change the value that the other pointer points to. If the extreme performance is what you want, The function _bstree\_insert_ can be correctly replaced by _bstree\_insert2_ as below. This conversion can save the time of memory allocation.
+There are actually two pointers which belong to two different address in the memory, but both of them point to the same space. If we change the value of the space one pointer points to, we simultaneously change the value that the other pointer points to. If the extreme performance is what you want, The function *bstree_insert* can be correctly replaced by *bstree_insert2* as below. This conversion can save the time of memory allocation.
 ```C
 int bstree_insert2(bstree ** tree, mytype data)
 {
@@ -796,7 +796,7 @@ int bstree_insert2(bstree ** tree, mytype data)
 	return -3;
 }
 ```
-Then modify the _main()_ code:
+Then modify the *main()* code:
 ```C
 res = bstree_insert2(&tree,data);
 ```
@@ -1113,7 +1113,7 @@ int list_queue_dequeue(list_queue *queue,void **data)
 	return 0;
 }
 ```
-Let's review the code of _binarytree.c_ and replace the function _binarytree\_create_ by _binarytree\_create2_:
+Let's review the code of *binarytree.c* and replace the function *binarytree_create* by *binarytree_create2*:
 ```C
 void binarytree_create2(Tree *Root)
 {
@@ -1147,4 +1147,4 @@ void binarytree_create2(Tree *Root)
 ```C
 binarytree_create(root);
 ```
-Is that right? definitely not. The code can be surely compiled successfully, but the procedure will stop at function _binarytree\_preorder_. Remember? The pointer cannot be directly passed as an argument if there will be memory allocation to the pointer later. the original pointer will always stay NULL. In addition, remember to free memory in each example to avoid memory leaks if I didn't do that.
+Is that right? definitely not. The code can be surely compiled successfully, but the procedure will stop at function *binarytree_preorder*. Remember? The pointer cannot be directly passed as an argument if there will be memory allocation to the pointer later. the original pointer will always stay NULL. In addition, remember to free memory in each example to avoid memory leaks if I didn't do that.
