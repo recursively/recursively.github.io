@@ -5,10 +5,10 @@ categories: Reverse Engineering
 tags: [iOS, Theos]
 description: Thanks to the release of Unc0ver suite which allows jailbreak on iOS11 and even on iOS12. I have the opportunity to try out the experiment of tweak on the iOS11 device. It's not complicated as I expected and meanwhile, interesting.
 ---
-## Tweak for What?
+## Tweak for what?
 You can make a choice of whatever you want to add a tweak on iOS. For me, I started with the SpringBoard of iOS. So, what is SpringBoard? SpringBoard is the application that manages the home screen on iOS devices. Essentially SpringBoard is like the mobile version of a desktop. Mac OS X features the Finder while Windows computers have the Explorer. And what does the tweak affect? This tweak works when the user triggers a respring(A respring restarts the user interface (SpringBoard) of the iOS operating system. The main difference between a restart and a respring is that a respring doesn’t switch off the system.).
 
-## Get the Environment Ready
+## Get the environment ready
 The framework I used during the tweak development is Theos(https://github.com/theos/theos), an efficient and powerful framework. It's simple to clone the project and execute the _chmod_ directive, so I omit that here and come to the steps different from the old version of Theos.
 
 Install dpkg and ldid which is used to sign your package instead of codesign in Xcode.
@@ -28,12 +28,12 @@ export THEOS_MAKE_PATH=$THEOS/makefiles
 ```
 All the preparations have been finished, we can now dive into the interesting section.
 
-## Functions Hooking
+## Functions hooking
 I post the final result appears on my device here:
 ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/2-1.png)
 Apple has given many APIs for AppStore developers, but it's not enough compared to the mammoth APIs which can be exposed on the jailbroken device. When it comes to developing tweaks, it's actually changing the behavior by hooking functions. But it's not easy to find out how the functionality implemented among the code. In fact, it takes lots of time to figure out the logic of the substrate. I just implement the common work supplied by other people.
 
-### Generate A Template.
+### Generate a template.
 Type nic.pl and choose an option from the given list. We want to generate a tweak template, so input 13. Then finish the following information.
 ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/2-2.png)
 When you see the output of "Done.", there will be 4 files generated under your working directory: 
@@ -41,7 +41,7 @@ When you see the output of "Done.", there will be 4 files generated under your w
 Makefile    commonproject.plist    Tweak.xm    control
 ```
 
-### Modify Files As You Need
+### Modify files as you need
 _Makefile_ is generally used in most projects to get everything done properly. In our project, it used to point out files, libraries and frameworks we need.
 ```shell
 THEOS_DEVICE_IP = 10.1.2.34
@@ -93,7 +93,7 @@ The *.plist file contains the configuration of your package.
 ```shell
 { Filter = { Bundles = ( "com.apple.springboard" ); }; }
 ```
-### Install Your Package
+### Install your package
 Next, we need to install our package onto the iOS device with directive _make package install_ remotely through the ssh. But firstly, you should have installed OpenSSH. You need to input your password of ssh twice during the installation process. If no errors prompt out you can respring your iOS device and easily see the result I've shown above.
 
 ## Sources

@@ -6,11 +6,11 @@ tags: [Python, Ethereum]
 description: Some ideas about crawling Ethereum smart contract sourcecode from the mainnet of Ethereum blockchain. Make sure you have at least 1 month to synchronize the complete blockchain node. :)
 images: ["https://img.shields.io/badge/python-3.6-blue.svg", "https://travis-ci.org/recursively/ContractSpider.svg?branch=master", "https://codecov.io/gh/recursively/ContractSpider/branch/master/graph/badge.svg"]
 ---
-## The Method to Crawl the Ethereum Blockchain
+## The method to crawl the Ethereum blockchain
 
 The simplest way is to get all of the blocks from Etherscan.io and can save much of my local space. I've tried to grab all of the transactions from Etherscan.io, but my IP was banned after a few of trials. So I have to synchronize the whole node of Ethereum blockchain into my local machine. My purpose is to grab the sourcecode of the smart contract, but it's not feasible to get the sourcecode from the bytecode itself. (Refer this question: https://ethereum.stackexchange.com/questions/26648/how-to-find-solidity-code-for-a-contract-address)
 
-## Get Information By web3
+## Get information by web3
 
 I used the web3.eth.getCode() method to identify whether an address is a contract or not. At first, I synchronized the whole node by adding argument --fast, and I cannot get the bytecode with web3.eth.getCode(). Maybe something was missing in this way of sync. So I deleted the database and added the argument --syncmode:
 ```shell
@@ -34,7 +34,7 @@ I used the getsourcecode api to get the verified contract. If the contract is no
 
 ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/3-1.png)
 
-## Separate the Blocks into Slices
+## Separate the blocks into slices
 
 The whole Ethereum blockchain contains over 5000,000 blocks, you'd better not get all of them into your computer memory. It's not complicated to solve it, you just need to separate the blocks into slices.
 
@@ -57,6 +57,6 @@ def spider(blocklist):
     get_addr_code(transactions)
 ```
 
-## Something Tricky
+## Something tricky
 
 I wanted to add the multiprocessing module to accelerate the crawling process, but I failed because of some strange reasons on Mac. Finally, I used the threading module to achieve that, but the result doesn't meet my expectations.
