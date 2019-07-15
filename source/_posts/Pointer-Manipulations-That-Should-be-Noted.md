@@ -1,5 +1,5 @@
 ---
-title: Pointer Manipulations That Should be Noted
+title: Pointer Manipulations That Should Be Noted
 date: 2019-02-12 15:02:09
 categories: Programming
 tags: C/C++
