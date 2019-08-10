@@ -1,8 +1,8 @@
 ---
 title: A Quantitative Trading Model with Stock Screener
 date: 2019-08-08 14:04:27
-categories:
-tags:
+categories: Trading
+tags: [Python, Crawler, Quantitative trading]
 description: This is a model that gathers some important information to decide which stock to buy. Certainly, the transaction can be made by the program itself automatically.
 images: ["https://img.shields.io/badge/python-3.6-blue.svg", "https://ci.appveyor.com/api/projects/status/cilhy53lx7k3hm6f?svg=true", "https://codecov.io/gh/recursively/quantitative_trading_pub/branch/master/graph/badge.svg"]
 ---
