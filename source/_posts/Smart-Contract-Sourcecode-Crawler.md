@@ -2,7 +2,7 @@
 title: Smart Contract Sourcecode Crawler
 date: 2018-07-09 11:39:39
 categories: Blockchain
-tags: [Python, Ethereum]
+tags: [Python, Ethereum, Crawler]
 description: Some ideas about crawling Ethereum smart contract sourcecode from the mainnet of Ethereum blockchain. Make sure you have at least 1 month to synchronize the complete blockchain node. :)
 images: ["https://img.shields.io/badge/python-3.6-blue.svg", "https://travis-ci.org/recursively/ContractSpider.svg?branch=master", "https://codecov.io/gh/recursively/ContractSpider/branch/master/graph/badge.svg"]
 ---
