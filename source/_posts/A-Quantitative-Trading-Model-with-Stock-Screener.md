@@ -63,7 +63,7 @@ def _createTimeoutPromise(self) -> Awaitable[None]:
 
         self._timeout_timer: Union[asyncio.Task, asyncio.Future] = self._loop.create_task(_timeout_func())
 ```
-Our goal is to handle this exception and stop if from shutting down the program. It can be solved in such an easy way, so funny.
+Our goal is to handle this exception and stop it from shutting down the program. It can be solved in such an easy way, so funny.
 
 ```python
 browser = await launch()
