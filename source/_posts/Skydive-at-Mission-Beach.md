@@ -38,7 +38,7 @@ description: 这次在Mission Beach的跳伞行动是一时冲动下的产物，
 <img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-4.jpg" width="50%" height="50%">
 
 <!-- ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-5.png) -->
-<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-5.png" width="50%" height="50%">
+<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-5.jpg" width="50%" height="50%">
 
 Btw，我个人感受是有冒险精神的女生尤其具有吸引力~
 
