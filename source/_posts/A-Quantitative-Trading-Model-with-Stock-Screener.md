@@ -11,27 +11,27 @@ Here I choose 5 elements including roe, gross profit margin, liabilities, net pr
 The stocks we will analyze mainly sold in many different stock markets, such as Shanghai Stock Exchange, Shenzhen Stock Exchange, Hong Kong Exchange, NASDAQ, New York Stock Exchange, American Stock Exchange, etc. We should filter the qualified stocks judged by the important elements we choose. There are a couple of methods to achieve that. This trading model doesn't contain complicated calculation and most of the work can be done by stock screener sites and tools like excel.
 There are tons of stock screeners on the Internet. The first thing is to select a useful one, it depends on yourself. 
 
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/6-1.png)
+<img src="pic_1.png" width="60%" height="60%">
 
 <center>https://www.tradingview.com/screener/</center>
 
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/6-2.png)
+<img src="pic_2.png" width="60%" height="60%">
 
 <center>https://finance.yahoo.com/screener/</center>
 
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/6-3.png)
+<img src="pic_3.png" width="60%" height="60%">
 
 <center>https://www.investing.com/stock-screener/</center>
 
 You may need to grab Details of some information from many different sites. For instance, the dividend payout ratio can be found at https://finbox.com/, and you even need to pay for the data at other sites. For Apple:
 
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/6-4.png)
+<img src="pic_4.png" width="60%" height="60%">
 
 <center>https://finbox.com/AAPL/explorer/payout_ratio</center>
 
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/6-5.png)
+<img src="pic_5.png" width="60%" height="60%">
 
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/6-6.png)
+<img src="pic_6.png" width="60%" height="60%">
 
 <center>https://finance.yahoo.com/quote/AAPL/key-statistics/</center>
 
