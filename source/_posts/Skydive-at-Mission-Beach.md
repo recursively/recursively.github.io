@@ -11,7 +11,7 @@ description: 这次在Mission Beach的跳伞行动是一时冲动下的产物，
 我们选择的跳伞地点是凯恩斯的Mission Beach，一大早从酒店出来还下雨，去海滩的一路上还担心跳伞因为天气原因取消了，所幸到了海滩阳光明媚。和我们一同前往的一车人大多数是亚洲面孔，主要是中国人和韩国人，还有几个澳大利亚本地的人。这次跳伞的体验总体来说还不赖。起初只是预定了跳伞的坑位，但是并不知道能不能预定到第三方的拍摄，也就是他们口中的“camera man”，会有另一个摄影师在空中跟拍，效果特别棒，这个通常来说很抢手，基本不可能留给临时打算预约的人，一趟飞机也只能满足一位乘客的这种拍摄需求。跟我们一趟车的一个澳大利亚本地姑娘就是提前预定的这个选项。我在临近跳伞的那几天也挺郁闷的，心想预约不到“camera man”无疑是巨大的遗憾，我本身有严重的强迫症，一旦不及自己的预期就会郁闷很长时间。但是在营地现场我看到售票员在介绍各种拍摄内容，然后我就去问了一下能不能预约“camera man”，她说没问题，她可以给我安排，在我还满头雾水的时候，幸福突然降临，我愣了几秒。她说没问题的话就可以登记付款了，然后安排妥当。我一下反应过来，那还用说，当然没问题啊！没等她把话说完我赶紧把卡拿出来塞给她，瞬间心情大好。
 
 <!-- ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-1.jpg) -->
-<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-1.jpg" width="50%" height="50%">
+<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-1.jpg" width="60%" height="60%">
 
 在我的教练给我穿装备的时候，他问我感觉怎样，我说很好，有点紧张罢了，他说“why？？”，然后拖着一个意味深长的表情，值得一提的是我看到这表情立马就轻松了许多，从他这表情里能看出异于常人的自信，遂觉稳了。后来我在降落伞打开后问他跳了多少次了，他说有几千次了，对于他们这种每天跳伞次数比上厕所次数还多的人来说，这种运动只是轻轻松松的享受罢了。这些教练都挺幽默亲切的，我们坐车从营地到机场的路上，我坐副驾驶位，开车的老头（50岁左右？）也是个话痨，还吓唬我说他们的飞机是没有舱门的，我不吃这套，whatever，坐门口的反正不是我。车子快到机场的时候教练开始各自检查自己的装备，想反悔这也是最后的机会，上了飞机就没有退路了。上飞机之前camera man跟我说了一大堆关于“give me five”之类的话，在飞机巨大的引擎声音下我大概听清楚了三分之二，反正到时候临场发挥就是了。准确地说这是个camera woman，在上车前我还奇怪这个长相甜美，声音同样甜美的妹子是跟我们去干嘛的，你能想象她现在居然要爬到飞机外面拍摄视频。。。
 
@@ -19,7 +19,7 @@ description: 这次在Mission Beach的跳伞行动是一时冲动下的产物，
 一行人站在飞机前拍了拍照，然后听从教练的指示上了飞机。起飞之前飞机舱门是开着的，直到飞机在跑道上加速的时候舱门也是开着的！就感受着强大的气流在舱门口呼啸而过！我猜在这种气压差下人是很容易被吸出去的。我不知道坐门口的中国妹子为什么如此淡定，而且门口连个扶手都没有，我刚开始只是静静地坐在自己的位子上，看到这架势立马开始找可以拽的东西，还好我左前方就有一个。这种小飞机不同于平时坐的客机，爬升的坡度特别陡，在短短几分钟之内就要上升到15000英尺的高空。我原本以为在这个高度并且视野广阔的条件下能够看到地球的曲率，就像图片里这样，真实情况是完全看不到，只是广角镜头的缘故。
 
 <!-- ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-2.jpeg) -->
-<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-2.jpeg" width="50%" height="50%">
+<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-2.jpeg" width="60%" height="60%">
 
 令我诧异的是不止我一个人，同飞机的人貌似都很淡定。看着飞机穿过那一片片的云层，心里就越发平静。教练问我感觉怎么样，大概是想舒缓一下我的紧张情绪，然后跟我介绍远方的大堡礁、热带雨林，美不胜收。接着我身后的教练喊了一声”one hundred！“，过了一会儿门口的教练就把飞机舱门打开了。外面气流涌动，尽管当时有28摄氏度左右，在这个高度空气也是冰凉的。然后就眼看着门口那一排陆续跳下去了，轮到我的时候我心里没有一点起伏，没有丝毫犹豫，直接就坐在舱门口用脚勾着舱门下方，教练让我把头尽量往他肩膀上靠，所以我整个人就像一个瘫痪的病人一样和教练一起滚了下去。在从舱门口往下跳的这个阶段他们跳伞俱乐部称之为“Big jump”，对于跳伞新手来说这无疑是至暗时刻。坐在舱门口是需要勇气的，为了给教练挪位置，此时几乎半个身子已经悬在机舱外了。不过我个人认为“Big jump”是最酷的部分。
 
@@ -30,15 +30,15 @@ description: 这次在Mission Beach的跳伞行动是一时冲动下的产物，
 开伞的时候会有略微失重的感觉，不过是很短暂的。在天上翱翔了短短几分钟，尤其觉得人类幸运的是，这个星球给予人类的阳光、空气、海洋、地心引力，这一切造就了跳伞这种独一无二的运动，造就了热爱这项运动的人。借这次澳大利亚之行也结识了不少新朋友，一位跟我们同一架飞机跳伞的妹子，是来澳洲找同学玩的，首先是只身前往凯恩斯跳伞，实在是勇气可嘉。
 
 <!-- ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-3.jpg) -->
-<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-3.jpg" width="50%" height="50%">
+<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-3.jpg" width="60%" height="60%">
 
 还有一位在国内认识的妹子也是去澳洲找同学玩的，原本打算有机会的话在澳洲一起组队自驾，后来路线错开了，她也在别的海滩完成了跳伞。（PS：两位妹子的照片都是经过了别人的同意才敢往外放的）
 
 <!-- ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-4.jpg) -->
-<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-4.jpg" width="50%" height="50%">
+<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-4.jpg" width="60%" height="60%">
 
 <!-- ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-5.png) -->
-<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-5.jpg" width="50%" height="50%">
+<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-5.jpg" width="60%" height="60%">
 
 Btw，我个人感受是有冒险精神的女生尤其具有吸引力~
 
