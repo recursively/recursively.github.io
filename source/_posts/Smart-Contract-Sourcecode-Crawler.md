@@ -32,7 +32,7 @@ https://api.etherscan.io/api?module=contract&action=getsourcecode&address=0xc368
 
 I used the getsourcecode api to get the verified contract. If the contract is not verified, this api will not work. Finally, you can check the states of your API from Etherscan.io:
 
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/3-1.png)
+<img src="pic_1.png" width="60%" height="60%">
 
 ## Separate the blocks into slices
 

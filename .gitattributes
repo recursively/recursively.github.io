@@ -1,3 +1,2 @@
-source/pics/* filter=lfs diff=lfs merge=lfs -text
 source/_posts/*/* filter=lfs diff=lfs merge=lfs -text
 *.png filter=lfs diff=lfs merge=lfs -text

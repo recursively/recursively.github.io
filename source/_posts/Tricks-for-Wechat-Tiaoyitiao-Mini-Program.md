@@ -10,7 +10,7 @@ date: 2018-05-11 16:32:36
 ---
 ## How does it act?
 
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/IMG_2723.GIF)
+<img src="pic_1.gif" width="100%" height="100%">
 
 ## Distinguish the Screenshot
 

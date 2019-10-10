@@ -30,12 +30,12 @@ All the preparations have been finished, we can now dive into the interesting se
 
 ## Functions hooking
 I post the final result appears on my device here:
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/2-1.png)
+<img src="pic_1.png" width="60%" height="60%">
 Apple has given many APIs for AppStore developers, but it's not enough compared to the mammoth APIs which can be exposed on the jailbroken device. When it comes to developing tweaks, it's actually changing the behavior by hooking functions. But it's not easy to find out how the functionality implemented among the code. In fact, it takes lots of time to figure out the logic of the substrate. I just implement the common work supplied by other people.
 
 ### Generate a template.
 Type nic.pl and choose an option from the given list. We want to generate a tweak template, so input 13. Then finish the following information.
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/2-2.png)
+<img src="pic_2.png" width="100%" height="100%">
 When you see the output of "Done.", there will be 4 files generated under your working directory: 
 ```shell
 Makefile    commonproject.plist    Tweak.xm    control
