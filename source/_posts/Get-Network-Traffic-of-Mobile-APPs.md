@@ -35,7 +35,7 @@ You can now find that JustTrustMe exists in your Xposed modules.
 
 This is a little bit tricky, it's briefly illustrated below:
 
-<img src="pic_6.png" width="60%" height="60%">
+<img src="pic_6.png" width="100%" height="100%">
 
 An elegant tool used here is DNSChef. (https://github.com/iphelix/dnschef) , modify the _dnschef.ini_ file to adapt to your needs and configure the nameserver and the listening interface. The content changed here is the A records.
 
@@ -86,7 +86,7 @@ This directive will forward all the network traffic of ip 10.1.3.1~10.1.3.253 at
 
 Make it clear:
 
-<img src="pic_9.png" width="60%" height="60%">
+<img src="pic_9.png" width="100%" height="100%">
 
 Open the BurpSuite listeners:
 

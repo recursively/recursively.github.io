@@ -163,7 +163,7 @@ int main() {
 ```
 It can be clearer by giving a diagram:
 
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/5-1.png)
+<img src="pic_1.png" width="100%" height="100%">
 
 Those examples we saw above is easy to understand. Let's dive in some instances which are a little bit confusing.
 
@@ -376,7 +376,7 @@ ret = createTeacher2(p, n1, n2);
 ```
 This code can be correctly compiled and if we run the program we will get stuck in the step of *initTeacher*. Because the pointer *p* passed to *createTeacher2* wasn't allocated memory due to the pass-by-value feature. In other words, the pointer *p* in the *main()* block will always point to NULL. 
 
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/5-2.png)
+<img src="pic_2.png" width="100%" height="100%">
 
 To fix it, we should use the double pointer to pass the address of pointer *p*.
 
@@ -732,7 +732,7 @@ int main()
 ```
 Now let's focus on the first while loop among the *main()* block. In this case, the pointer *tree* was directly passed into the function *bstree_insert*, it's kind of odd compared with the previous instances. The difference is that the pointer *tree* has been allocated memory before passed as an argument. 
 
-![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/5-3.png)
+<img src="pic_3.png" width="100%" height="100%">
 
 There are actually two pointers which belong to two different address in the memory, but both of them point to the same space. If we change the value of the space one pointer points to, we simultaneously change the value that the other pointer points to. If the extreme performance is what you want, The function *bstree_insert* can be correctly replaced by *bstree_insert2* as below. This conversion can save the time of memory allocation.
 ```C
