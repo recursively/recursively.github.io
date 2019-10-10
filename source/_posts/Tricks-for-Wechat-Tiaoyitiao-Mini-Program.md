@@ -10,7 +10,7 @@ date: 2018-05-11 16:32:36
 ---
 ## How does it act?
 
-<img src="pic_1.gif" width="100%" height="100%">
+<img src="pic_1.GIF" width="100%" height="100%">
 
 ## Distinguish the Screenshot
 
