@@ -3,6 +3,7 @@ title: Skydive at Mission Beach
 date: 2019-10-08 15:31:21
 categories: Life
 tags: [Outdoor]
+keywords: [跳伞, 澳大利亚, Skydive, Mission Beach]
 description: 这次在Mission Beach的跳伞行动是一时冲动下的产物，没有策划，毫无准备。在日期临近的时候才发现这件事有点疯狂，在楼上晾衣服都双腿发软的同行伙伴回复我说：“扛住压力，硬上！”
 ---
 ### 心生想法
