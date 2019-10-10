@@ -15,7 +15,7 @@ There are 4 methods listed below, and there are certainly other methods exist in
 
 It's simple, just get into the settings and set the proxy and port to your own server, and it's done.
 
-<img src="pic_1.jpeg" width="60%" height="60%">
+<img src="pic_1.png" width="60%" height="60%">
 
 This is recommended for most users, but it doesn't work if the APP doesn't allow system proxy. 
 
@@ -29,13 +29,13 @@ adb install ./JustTrustMe.apk
 ```
 You can now find that JustTrustMe exists in your Xposed modules.
 
-<img src="pic_2.jpeg" width="60%" height="60%">
+<img src="pic_2.png" width="60%" height="60%">
 
 - ### Setting up your own DNS server
 
 This is a little bit tricky, it's briefly illustrated below:
 
-<img src="pic_6.jpeg" width="60%" height="60%">
+<img src="pic_6.png" width="60%" height="60%">
 
 An elegant tool used here is DNSChef. (https://github.com/iphelix/dnschef) , modify the _dnschef.ini_ file to adapt to your needs and configure the nameserver and the listening interface. The content changed here is the A records.
 
@@ -52,19 +52,19 @@ If you're using APPs within an android virtual machine, remember to change the n
 
 Open listeners in BurpSuite:
 
-<img src="pic_7.jpeg" width="60%" height="60%">
+<img src="pic_7.png" width="60%" height="60%">
 
 Find out the target IP of your requested hosts so that BurpSuite can follow the DNS resolution.
 
-<img src="pic_5.jpeg" width="60%" height="60%">
+<img src="pic_5.png" width="60%" height="60%">
 
 Assuming that you send a request to _www.amazon.com_ you can get ordinary responses like this:
 
-<img src="pic_4.jpeg" width="60%" height="60%">
+<img src="pic_4.png" width="60%" height="60%">
 
-<img src="pic_3.jpeg" width="60%" height="60%">
+<img src="pic_3.png" width="60%" height="60%">
 
-<img src="pic_8.jpeg" width="60%" height="60%">
+<img src="pic_8.png" width="60%" height="60%">
 
 - ### Forward traffic of the router
 
@@ -86,15 +86,15 @@ This directive will forward all the network traffic of ip 10.1.3.1~10.1.3.253 at
 
 Make it clear:
 
-<img src="pic_9.jpeg" width="60%" height="60%">
+<img src="pic_9.png" width="60%" height="60%">
 
 Open the BurpSuite listeners:
 
-<img src="pic_10.jpeg" width="60%" height="60%">
+<img src="pic_10.png" width="60%" height="60%">
 
 All that network traffic can be sent directly or through a proxy like mitmproxy(https://github.com/mitmproxy/mitmproxy) listened at port 9010, it's necessary if you would like to make some changes to the packets.
 
-<img src="pic_11.jpeg" width="60%" height="60%">
+<img src="pic_11.png" width="60%" height="60%">
 
 ## What else?
 Those proposals mentioned above can handle almost 90% of the situations we will encounter. If it doesn't work, some tools work at IP based network may be helpful, such as bettercap.(https://github.com/bettercap/bettercap)
