@@ -31,15 +31,15 @@ description: 这次在Mission Beach的跳伞行动是一时冲动下的产物，
 开伞的时候会有略微失重的感觉，不过是很短暂的。在天上翱翔了短短几分钟，尤其觉得人类幸运的是，这个星球给予人类的阳光、空气、海洋、地心引力，这一切造就了跳伞这种独一无二的运动，造就了热爱这项运动的人。借这次澳大利亚之行也结识了不少新朋友，一位跟我们同一架飞机跳伞的妹子，是来澳洲找同学玩的，首先是只身前往凯恩斯跳伞，实在是勇气可嘉。
 
 <!-- ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-3.jpg) -->
-<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-3.jpg" width="60%" height="60%">
+<img src="pic_3.jpeg" width="60%" height="60%">
 
 还有一位在国内认识的妹子也是去澳洲找同学玩的，原本打算有机会的话在澳洲一起组队自驾，后来路线错开了，她也在别的海滩完成了跳伞。（PS：两位妹子的照片都是经过了别人的同意才敢往外放的）
 
 <!-- ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-4.jpg) -->
-<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-4.jpg" width="60%" height="60%">
+<img src="pic_4.jpeg" width="60%" height="60%">
 
 <!-- ![](https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-5.png) -->
-<img src="https://media.githubusercontent.com/media/recursively/recursively.github.io/hexo/source/pics/7-5.jpg" width="60%" height="60%">
+<img src="pic_5.jpeg" width="60%" height="60%">
 
 Btw，我个人感受是有冒险精神的女生尤其具有吸引力~
 
