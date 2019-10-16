@@ -24,7 +24,7 @@ We use the DNS spoofing module here and modify the configuration.
 
 Change the DNS server on the target host to our attacking machine.
 
-<img src="pic_3.jpeg" width="50%" height="50%">
+<img src="pic_3.jpeg" width="30%" height="30%">
 
 Create a new file named *readme.txt* on my attacking machine, and start up the python HTTP server for web page hijacking.
 
@@ -38,6 +38,30 @@ Now, most of the work is done. Let's take a look at the effect. I visited *a.goo
 <img src="pic_4.jpeg" width="60%" height="60%">
 
 But we still have a problem here, how can we change all the DNS configurations in every single host within the same intranet? I have tried to add DNS forwarding in the OpenWrt router, but it didn't work, maybe I made some mistakes somewhere. So I have to try another stupid method which I mentioned in my previous post(https://recursively.review/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/). Forwarding all the DNS requests to my attacking server. 
+
+I set the IP address of my machine to a static IP address for convenience. Make some changes to the file */etc/network/interfaces*.
+
+```shell
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet static
+address 192.168.2.254
+netmask 255.255.255.0
+gateway 192.168.2.1
+```
+
+To the file */etc/resolv.conf*
+```shell
+domain
+nameserver 192.168.2.1
+search localdomain
+```
+
+Then the IP address will be set to 192.168.2.254 with a reboot.
+
+<img src="pic_6.png" width="100%" height="100%">
 
 DNS requests use both TCP and UDP protocol, so we should make some changes to get it to work.
 
