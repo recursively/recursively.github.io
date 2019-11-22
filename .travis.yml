@@ -10,7 +10,7 @@ install:
 - cd ./themes
 - rm -rf Next
 - git clone https://github.com/recursively/hexo-theme-next.git Next
-- cd -
+# - cd -
 # - cd ./themes/Next/source/lib
 # - rm -rf three
 # - git clone https://github.com/recursively/theme-next-three.git three
