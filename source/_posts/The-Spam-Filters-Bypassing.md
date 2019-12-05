@@ -124,6 +124,6 @@ except smtplib.SMTPException:
 
 The command and script can bypass the Gmail spam filter. And the forwarding server can be seen in the email title as I mentioned above.
 
-<img src="pic_9.png" width="60%" height="60%">
+<img src="pic_9.png" width="40%" height="40%">
 
 For the methods discussed above, all of them cannot perform a perfect email attack. But if you are not careful enough, you will be hacked through social engineering phishing.
