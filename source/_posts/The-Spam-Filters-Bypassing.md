@@ -27,11 +27,11 @@ swaks --to xxx@live.com --from xx@smtp2go.com --h-From: 'admin<admin@qq.com>'  -
 
 But This email was tagged as junk email by Outlook. Let's take a look at the email source and we will see that the SPF authentication is passed. 
 
-<img src="pic_12.png" width="60%" height="60%">
+<img src="pic_5.png" width="60%" height="60%">
 
 I searched the keyword "swaks" and saw the X-Mailer parameter is suspicious. 
 
-<img src="pic_5.png" width="60%" height="60%">
+<img src="pic_12.png" width="60%" height="60%">
 
 I changed the value of the X-Mailer parameter and resent the email.
 
@@ -108,7 +108,7 @@ So I changed the SMTP server to smtp2go.com. The fake email was received success
 I changed the target mailbox to Gmail and tested the *swaks* command and the python script.
 
 ```shell
-swaks --header-X-Mailer smtp2go.com --to recursively.z@gmail.com --from xx@smtp2go.com --h-From: 'admin<admin@qq.com>'  --body body.txt --ehlo gmail.com --server mail.smtp2go.com -p 2525 -au xxx -ap xxx
+swaks --header-X-Mailer smtp2go.com --to recursively.z@gmail.com --from xx@smtp2go.com --h-From: 'admin<admin@qq.com>'  --body body.txt --ehlo qq.com --server mail.smtp2go.com -p 2525 -au xxx -ap xxx
 ```
 
 ```python
