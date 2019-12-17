@@ -148,4 +148,22 @@ The command and script can bypass the Gmail spam filter. And the forwarding serv
 
 <img src="pic_9.png" width="40%" height="40%">
 
+You could copy the email templates to make your email look real. Duplicate the content of the email template you chose.
+
+<img src="pic_13.png" width="40%" height="40%">
+
+To render the email content properly, the right *Content-Type* header is necessary.
+
+<img src="pic_14.png" width="40%" height="40%">
+
+We could use the swaks argument *--add-header* to achieve that.
+
+```shell
+swaks --header-X-Mailer smtp2go.com --to recursively.z@gmail.com --from xx@smtp2go.com --h-From: 'admin<admin@qq.com>'  --body body.txt --add-header 'Content-Type: multipart/alternative; boundary="----=_Part_3446155_1116810407.1576461749230"' --ehlo qq.com --server mail.smtp2go.com -p 2525 -au xxx -ap xxx
+```
+
+Finally let's take a look at the effect.
+
+<img src="pic_15.png" width="40%" height="40%">
+
 For the methods discussed above, all of them cannot perform a perfect email attack. But if you are not careful enough, you will be hacked through social engineering phishing.
