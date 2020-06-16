@@ -14,11 +14,11 @@ install:
 - cd Next
 - sed -i "s/hidden_client_id/${client_id}/g" ./_config.yml
 - sed -i "s/hidden_client_secret/${client_secret}/g" ./_config.yml
+- cd ../../
 # - cd -
 # - cd ./themes/Next/source/lib
 # - rm -rf three
 # - git clone https://github.com/recursively/theme-next-three.git three
-- cd -
 script:
 - hexo clean
 - hexo generate
