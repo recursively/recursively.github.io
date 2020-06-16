@@ -79,7 +79,7 @@ pagination_dir: page
 theme: Next
 
 feed: 
-    path: rss.xml
+    path: atom.xml
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
