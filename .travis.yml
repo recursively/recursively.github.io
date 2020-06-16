@@ -11,6 +11,9 @@ install:
 - cd ./themes
 - rm -rf Next
 - git clone https://github.com/recursively/hexo-theme-next.git Next
+- cd Next
+- sed -i "s/hidden_client_id/${client_id}/g" ./_config.yml
+- sed -i "s/hidden_client_secret/${client_secret}/g" ./_config.yml
 # - cd -
 # - cd ./themes/Next/source/lib
 # - rm -rf three
