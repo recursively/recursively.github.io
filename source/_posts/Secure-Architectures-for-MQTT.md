@@ -9,11 +9,11 @@ description: MQTT has basic authentication mechanism as a universal IoT transmis
 
 For most cases we use one broker to forward the MQTT topics like the chart below. 
 
-<img src="pic_1.jpg" width="60%" height="60%">
+<img src="pic_1.png" width="60%" height="60%">
 
 All topics that publishers have published are accessible for other people who can pretend to be the subscribers. Imagine that we have published some topics to the MQTT broker including some sensitive topics which we don't want other people to access. Or if we use username and password to authenticate separately on each IoT device. The passwords may be leaked in some way. It's necessary to store the passwords on the trusted devices. The chart may help you understand. 
 
-<img src="pic_2.jpg" width="60%" height="60%">
+<img src="pic_2.png" width="60%" height="60%">
 
 Assume that we have already got one trusted device, so we can start to set up the environment step by step. We need to startup two MQTT brokers. All outcome subscribers' topics should be sent to broker2, and the other one used to provide service for publishers. So we can set our rules between these two brokers. Firstly generate your password file, you can set the user name and password whatever you like, here I set my user name and password to forward/forward123.
 ```shell
