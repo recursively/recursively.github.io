@@ -4,10 +4,10 @@ date: 2020-10-15 10:33:18
 categories: IoT
 tags: MQTT
 keywords: [MQTT, IoT]
-description: MQTT has basic authentication mechanism as a universal IoT transmission protocol. We can basically use username and password to achieve that. But as the number of devices increases, the risk of password leakage increases. Maybe we can design different kinds of architectures to prevent the possible risk. Even more, we can use different architectures in complex situations.
+description: MQTT has a basic authentication mechanism as a universal IoT transmission protocol. We can basically use a username and password to achieve that. But as the number of devices increases, the risk of password leakage increases. Maybe we can design different kinds of architectures to prevent the possible risk. Even more, we can use different architectures in complex situations.
 ---
 
-For most cases we use one broker to forward the MQTT topics like the chart below. 
+For most cases, we use one broker to forward the MQTT topics like the chart below. 
 
 <img src="pic_1.png" width="60%" height="60%">
 
@@ -20,7 +20,7 @@ Assume that we have already got one trusted device, so we can start to set up th
 sudo mosquitto_passwd -c /etc/mosquitto/passwd forward
 Password: forward123
 ```
-The password file is used by broker which provides access control service. Now we are modifying the configuration of this broker. Use listener to specify the address and port.
+The password file is used by the broker which provides access control service. Now we are modifying the configuration of this broker. Use the listener to specify the address and port.
 ```ini
 listener 1883 127.0.0.1
 ```
@@ -32,7 +32,7 @@ acl_file /etc/mosquitto/acl
 ```
 I gave the configuration file name "mosquitto.conf".
 
-Now create the acl file and add some rules in it. Note that there are three types of permissions: read, write and readwrite. You can also use wildcards in acl file.
+Now create the acl file and add some rules to it. Note that there are three types of permissions: read, write, and readwrite. You can also use wildcards in the acl file.
 ```ini
 user forward
 topic readwrite mqtt/#
@@ -59,7 +59,7 @@ sudo mosquitto -c mosquitto.conf
 ```shell
 sudo mosquitto -c mosquitto.conf2
 ```
-We can simply check if it's working well by create a subscriber here:
+We can simply check if it's working well by creating a subscriber here:
 ```shell
 mosquitto_sub -h 172.20.1.92 -t "mqtt/test"
 ```
@@ -71,9 +71,9 @@ If everything set properly, you should notice that there's message appears in th
 ```plain
 mqtt/test Hello mqtt
 ```
-Try changing the topic to another one that's different from the "mqtt" prefix or try changing the password in the *passwd* file, and restart these two brokers. It's expected that the subscriber will not receive any messages sent from publisher.
+Try changing the topic to another one that's different from the "mqtt" prefix or try changing the password in the *passwd* file, and restart these two brokers. It's expected that the subscriber will not receive any messages sent from the publisher.
 
-Somehow, you can also allow the anonymous access to brokers although it's a little bit unsafe. That will be much easier to set up the environment. For the broker which is accessible to subscribers, append these content to the configuration file and name it "mosquitto.conf2".
+Somehow, you can also allow anonymous access to brokers although it's a little bit unsafe. That will be much easier to set up the environment. For the broker which is accessible to subscribers, append this content to the configuration file and name it "mosquitto.conf2".
 ```ini
 listener 1883 172.20.1.92
 ```
@@ -108,4 +108,4 @@ mosquitto_sub -h 172.20.1.92 -t "mqtt/test"
 ```shell
 mosquitto_pub -h 127.0.0.1 -t "mqtt/test" -m "Hello mqtt"
 ```
-If everything goes well, the subscriber will receive the message "Hello mqtt". Then we can subscribe another topic different from "mqtt/#" as subscriber, and send message as publisher again. You can find that the broker will block the subscriber to receive the message.
+If everything goes well, the subscriber will receive the message "Hello mqtt". Then we can subscribe another topic different from "mqtt/#" as a subscriber, and send the message as a publisher again. You can find that the broker will block the subscriber to receive the message.
