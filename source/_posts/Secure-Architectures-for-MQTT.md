@@ -32,7 +32,7 @@ acl_file /etc/mosquitto/acl
 ```
 I gave the configuration file name "mosquitto.conf".
 
-Now create the acl file and add some rules to it. Note that there are three types of permissions: read, write, and readwrite. You can also use wildcards in the acl file.
+Now create the acl file and add some rules to it. Note that there are three types of permissions: read, write, and readwrite. You can also use wildcards in the acl file. Assuming that I want to give read and write permission to the topic "mqtt/#" for user "forward".
 ```ini
 user forward
 topic readwrite mqtt/#
