@@ -11,11 +11,11 @@ For most cases, we use one broker to forward the MQTT topics like the chart belo
 
 <img src="pic_1.png" width="60%" height="60%">
 
-All topics that publishers have published are accessible for other people who can pretend to be the subscribers. Imagine that we have published some topics to the MQTT broker including some sensitive topics which we don't want other people to access. Or if we use username and password to authenticate separately on each IoT device. The passwords may be leaked in some way. It's necessary to store the passwords on the trusted devices. The chart may help you understand. 
+All topics that publishers have published are accessible for other people who can pretend to be the subscribers. Imagine that we have published some topics to the MQTT broker including some sensitive topics which we don't want other people to access. Or if we use username and password to authenticate separately on each IoT device. The passwords can be revealed somehow. It's necessary to store the passwords on the trusted devices. The chart may help you understand. 
 
 <img src="pic_2.png" width="60%" height="60%">
 
-Assume that we have already got one trusted device, so we can start to set up the environment step by step. We need to startup two MQTT brokers. All outcome subscribers' topics should be sent to broker2, and the other one used to provide service for publishers. So we can set our rules between these two brokers. Firstly generate your password file, you can set the user name and password whatever you like, here I set my user name and password to forward/forward123.
+Assume that we have already got one trusted device, so we can start to set up the environment step by step. We need to startup two MQTT brokers. All outcome topics from untrusted devices should be sent to broker2, and the other one used to provide service for trusted services. The broker2 plays the role just like a firewall, it decides whether forwarding the requests to the broker1 or not. So we can set our rules between these two brokers. Firstly generate your password file, you can set the user name and password whatever you like, here I set my user name and password to forward/forward123.
 ```shell
 sudo mosquitto_passwd -c /etc/mosquitto/passwd forward
 Password: forward123
@@ -38,7 +38,7 @@ user forward
 topic readwrite mqtt/#
 ```
 
-For the broker which used to receive subscriber's requests, you need to specify the address and port and apply the bridge function properly. I named this configuration file "mosquitto.conf2".
+For the broker which used to receive untrusted requests, you need to specify the address and port and apply the bridge function properly. I named this configuration file "mosquitto.conf2".
 ```ini
 listener 1883 172.20.1.92
 ```
@@ -67,13 +67,13 @@ And we create a publisher to push messages to the topic:
 ```shell
 mosquitto_pub -h 127.0.0.1 -t "mqtt/test" -m "Hello mqtt" -u "forward" -P "forward123"
 ```
-If everything set properly, you should notice that there's message appears in the subscriber's prompt:
+If everything set properly, you should notice that there's a message appears in the subscriber's prompt:
 ```plain
 mqtt/test Hello mqtt
 ```
 Try changing the topic to another one that's different from the "mqtt" prefix or try changing the password in the *passwd* file, and restart these two brokers. It's expected that the subscriber will not receive any messages sent from the publisher.
 
-Somehow, you can also allow anonymous access to brokers although it's a little bit unsafe. That will be much easier to set up the environment. For the broker which is accessible to subscribers, append this content to the configuration file and name it "mosquitto.conf2".
+Somehow, you can also allow anonymous access to brokers although it's a little bit unsafe. That will be much easier to set up the environment. For the broker which is accessible to untrusted services, append this content to the configuration file and name it "mosquitto.conf2".
 ```ini
 listener 1883 172.20.1.92
 ```
@@ -95,7 +95,7 @@ Then modify the acl file:
 ```ini
 topic readwrite mqtt/#
 ```
-Now let's have a test. Start both brokers and execute commands as subscriber and publisher separately.
+Now let's have a test. Start both brokers and execute commands as a subscriber and publisher separately.
 ```shell
 sudo mosquitto -c mosquitto.conf
 ```
