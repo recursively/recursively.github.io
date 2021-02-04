@@ -1,15 +1,15 @@
 ---
 title: Secure Coding Practice - Injection
 date: 2020-10-15 09:16:20
-categories: []
-tags: [Injection, SQL injection, Secure coding]
-keywords: [Injection, SQL injection, Secure coding]
-description: This is about secure coding during development. The OWASP TOP 10 is our guide to define vulnerability type. For this part, it will focus on the mitigation of injection problem.
+categories: SCP
+tags: [Injection, SQL injection, SCP]
+keywords: [Injection, SQL injection, SCP]
+description: This series is about secure coding during development. The OWASP TOP 10 is our guide to define vulnerability type. For this part, it will focus on the vulnerable points and the mitigation of injection problems.
 ---
 ## Overview
 Injection flaws, such as SQL, NoSQL, OS, and LDAP injection, occur when untrusted data is sent to an interpreter as part of a command or query. The attacker’s hostile data can trick the interpreter into executing unintended commands or accessing data without proper authorization.
 
-## SQL Injection
+## SQL injection
 The most common example acount the injection problem is SQL injection. Here we're gonna discuss the vulnerable code and mitigation for different coding languages.
 
 ### Go
@@ -71,4 +71,12 @@ All the query statement will be pre-analysed except the placeholder "?". Placeho
 | WHERE col = ?   | WHERE col = $1     | WHERE col = :col            |
 | VALUES(?, ?, ?) | VALUES($1, $2, $3) | VALUES(:val1, :val2, :val3) |
 
+## Mitigation
+There are three primary defenses to avoid SQL injection:
 
+* Use of Prepared Statements 
+* Use of Stored Procedures(Only if stored procedure does not generate dynamic SQL)
+* Whitelist Input Validation
+
+## Reference
+https://owasp.org/www-project-top-ten/2017/Top_10.html
