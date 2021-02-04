@@ -1,8 +1,8 @@
 ---
 title: Secure Coding Practice - Injection
 date: 2020-10-15 09:16:20
-categories:
-tags:
+categories: []
+tags: [Injection, SQL injection, Secure coding]
 keywords: [Injection, SQL injection, Secure coding]
 description: This is about secure coding during development. The OWASP TOP 10 is our guide to define vulnerability type. For this part, it will focus on the mitigation of injection problem.
 ---
@@ -65,8 +65,9 @@ MariaDB [security]> execute stmt using @param;
 1 row in set (0.001 sec)
 ```
 All the query statement will be pre-analysed except the placeholder "?". Placeholder syntax in prepared statements is database-specific. For example, comparing MySQL, PostgreSQL, and Oracle:
+
 | MySQL           | PostgreSQL         | Oracle                      |
-| :-------------: |:------------------:| :--------------------------:|
+| :-------------: | :----------------: | :-------------------------: |
 | WHERE col = ?   | WHERE col = $1     | WHERE col = :col            |
 | VALUES(?, ?, ?) | VALUES($1, $2, $3) | VALUES(:val1, :val2, :val3) |
 
