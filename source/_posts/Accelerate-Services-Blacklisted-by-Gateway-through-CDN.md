@@ -32,7 +32,7 @@ If you already have a domain name, make sure you have changed the name server fr
 
 Next you need to register a Cloudflare account and add your domain name.
 
-<img src="pic_5.png" width="100%" height="100%">
+<img src="pic_5.png" width="60%" height="60%">
 
 Now we have come to the crucial step, configure your DNS records. Modify your root domain or any subdomains you like to point to the IP address of your server in the A record field.
 
@@ -40,7 +40,7 @@ Now we have come to the crucial step, configure your DNS records. Modify your ro
 
 Remember to enable the proxy and make sure the icon is orange, it's disabled if the color is grey.
 
-<img src="pic_7.png" width="100%" height="100%">
+<img src="pic_7.png" width="60%" height="60%">
 
 
 <p align="center"><font size=5>Modify The Protocol Configuration</font></p>
