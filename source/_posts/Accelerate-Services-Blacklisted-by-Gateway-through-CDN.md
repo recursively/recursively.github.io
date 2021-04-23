@@ -64,8 +64,18 @@ For the server-side configuration, modify the *inbounds* field:
 
 For the client-side configuration, change the address to your domain name, and switch the network to Websocket(ws), don't forget to fill in the *path* field.
 
-```json
-
+```yaml
+  type: vmess
+  server: your domain name
+  port: 80
+  uuid: 
+  alterId: 64
+  cipher: auto
+  # udp: true
+  # tls: true
+  # skip-cert-verify: true
+  network: ws
+  ws-path: /
 ```
 
 ## Pros and Cons
@@ -74,6 +84,10 @@ The advantage is obvious. What can be confirmed is that the CDN is rarely banned
 
 The disadvantage cannot be ignored. The network latency will be high, in fact, sometimes the connection speed is really slow. 
 
-pic
+<img src="pic_8.png" width="60%" height="60%">
+
+<img src="pic_9.png" width="60%" height="60%">
+
+<img src="pic_10.png" width="60%" height="60%">
 
 It's not suggested to apply this proposal for some services that require high performance and low latency.
