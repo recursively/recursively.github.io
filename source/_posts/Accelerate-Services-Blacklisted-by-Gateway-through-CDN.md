@@ -1,6 +1,6 @@
 ---
 title: Accelerate Services Blacklisted by Gateway through CDN
-date: 2021-04-13 16:30:52
+date: 2021-01-13 16:30:52
 categories: Network
 tags: [CDN, Cloudflare]
 keywords: [CDN, Cloudflare, vmess, v2ray, websocket, shadowsocket]
@@ -8,7 +8,7 @@ description: There are some useful methods to accelerate services that are black
 ---
 ## Packet Flow
 
-The premise for using CDN to bypass the gateway blacklist is that the gateway will never block the traffic from CDN. According to the different CDN providers, there are basically three packet flows:
+The prerequisite for using CDN to bypass the gateway blacklist is that the gateway will never block the traffic from CDN. According to the different CDN providers, there are basically three packet flows:
 
 <img src="pic_1.png" width="100%" height="100%">
 
