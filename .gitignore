@@ -4,3 +4,4 @@ package-lock.json
 public/
 source/_posts/.ipynb_checkpoints/
 *.swp
+.deploy_git/
