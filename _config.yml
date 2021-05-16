@@ -89,6 +89,12 @@ deploy:
     branch: master
     message: "Travis CI Auto Builder"
 
+# deploy:
+#   - type: git
+#     repo: https://github.com/recursively/recursively.github.io
+#     branch: master
+#     message: "Issues fixing"
+
 sitemap:
     path: sitemap.xml
 baidusitemap:
