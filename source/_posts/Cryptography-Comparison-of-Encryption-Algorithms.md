@@ -1,10 +1,10 @@
 ---
 title: Cryptography - Comparison of Encryption Algorithms
-date: 2021-05-16 11:11:34
+date: 2021-01-16 11:11:34
 categories: Cryptography
 tags: [Encryption, Cipher]
 keywords: [Cryptography, Encryption, Cipher]
-description: A brief comparison of different encryption and encoding algorithms.
+description: A brief comparison of common encryption and encoding algorithms, and some supplementary content may be useful.
 ---
 ## Symmetric Encryption Algorithm
 
