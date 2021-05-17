@@ -19,16 +19,16 @@ description: A brief comparison of common encryption and encoding algorithms, an
 
 ## Asymmetric Encryption Algorithm
 
-| Algorithm  | Encryption Strength | Key Generation Performance | Encryption and Decryption Performance | Copyright     |
-| :--------: | :-----------------: | :------------------------: | :-----------------------------------: | :-----------: |
-| RSA        | Weak                | Slow                       | Fast                                  | RSA Company   |
-| ECC        | Strong              | Fast                       | Slow                                  | ?             |
-| SM2        | Strong              | Fast                       | Slow                                  | China         |
+| Algorithm  | Encryption Strength | Key Generation Performance | Encryption/Decryption Performance | Copyright        |
+| :--------: | :-----------------: | :------------------------: | :-------------------------------: | :--------------: |
+| RSA        | Weak                | Slow                       | Fast                              | RSA Security LLC |
+| ECC        | Strong              | Fast                       | Slow                              | United States    |
+| SM2        | Strong              | Fast                       | Slow                              | China            |
 
 ## Hash Algorithm
 
-| Algorithm  | Length  | Conflict Probability | Safety | Performance |
-| :--------: | :-----: | :------------------: | :----: | :---------: |
-| MD5        | 128     | Medium               | Medium | Medium      |
-| SHA        | 160/256 | Low                  | High   | Slow        |
-| SM3        | 256     | Low                  | High   | ?           |
+| Algorithm  | Length  | Conflict Probability | Safety | Performance | Copyright     |
+| :--------: | :-----: | :------------------: | :----: | :---------: | :-----------: |
+| MD5        | 128     | Medium               | Medium | Medium      | MIT           |
+| SHA        | 160/256 | Low                  | High   | Slow        | United States |
+| SM3        | 256     | Low                  | High   | ?           | China         |
