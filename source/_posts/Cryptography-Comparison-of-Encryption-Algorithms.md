@@ -17,6 +17,40 @@ description: A brief comparison of common encryption and encoding algorithms, an
 | SM1        | 128         | Strong              | ?           | China         |
 | SM4        | 128         | Strong              | ?           | China         |
 
+The symmetric algorithms are usually implemented by block cipher. The modes of operation of block cipher include ECB, CBC, OFB, CFB, CTR.
+
+### Pros and Cons of Modes of Operation
+
+#### ECB
+
+* Good points: Very simple, encryption and decryption can be run in parallel.
+
+* Bad points: Horribly insecure.
+
+#### CBC
+
+* Good points: Secure when used properly, parallel decryption.
+
+* Bad points: No parallel encryption, susceptible to malleability attacks when authenticity checks are bad / missing. But when done right, it's very good.
+
+#### OFB
+
+* Good points: Keystream can be computed in advance, fast hardware implementations available.
+
+* Bad points: Security model is questionable, some configurations lead to short keystream cycles.
+
+#### CFB
+
+* Good points: Small footprint, parallel decryption.
+
+* Bad points: Not commonly implemented or used.
+
+#### CTR
+
+* Good points: Secure when done right, parallel encryption and decryption.
+
+* Bad points: Not many. Some question the security of the "related plaintext" model but it's generally considered to be safe.
+
 ## Asymmetric Encryption Algorithm
 
 ### Public-Key Algorithm Families of Practical Relevance
