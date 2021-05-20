@@ -8,14 +8,14 @@ description: A brief comparison of common encryption and encoding algorithms, an
 ---
 ## Symmetric Encryption Algorithm
 
-| Algorithm  | Key Length  | Encryption Strength | Performance | Copyright     |
-| :--------: | :---------: | :-----------------: | :---------: | :-----------: |
-| DES        | 56          | Weak                | Fast        | United States |
-| 3DES       | 168         | Medium              | Slow        | United States |
-| IDEA       | 128         | Strong              | Medium      | Switzerland   |
-| AES        | 128/192/256 | Strong              | Fast        | United States |
-| SM1        | 128         | Strong              | ?           | China         |
-| SM4        | 128         | Strong              | ?           | China         |
+| Algorithm  | Key Length  | Encryption Strength | Performance | Quantum Computing Resistance | Copyright     |
+| :--------: | :---------: | :-----------------: | :---------: | :--------------------------: | :-----------: |
+| DES        | 56          | Weak                | Fast        | Weak                         | United States |
+| 3DES       | 168         | Medium              | Slow        | Medium                       | United States |
+| IDEA       | 128         | Strong              | Medium      | Medium                       | Switzerland   |
+| AES        | 128/192/256 | Strong              | Fast        | Strong                       | United States |
+| SM1        | 128         | Strong              | ?           | Medium                       | China         |
+| SM4        | 128         | Strong              | Medium      | Medium                       | China         |
 
 The symmetric algorithms are usually implemented by block cipher. The modes of operation of block cipher include ECB, CBC, OFB, CFB, CTR.
 
@@ -63,7 +63,7 @@ The symmetric algorithms are usually implemented by block cipher. The modes of o
 
 | Algorithm  | Encryption Strength | Key Generation Performance | Encryption/Decryption Performance | Copyright        |
 | :--------: | :-----------------: | :------------------------: | :-------------------------------: | :--------------: |
-| RSA        | Weak                | Slow                       | Fast                              | RSA Security LLC |
+| RSA        | Medium              | Slow                       | Fast                              | RSA Security LLC |
 | ECC        | Strong              | Fast                       | Slow                              | United States    |
 | SM2        | Strong              | Fast                       | Slow                              | China            |
 
