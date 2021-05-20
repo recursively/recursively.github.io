@@ -139,67 +139,67 @@ sys 	0m2.057s
 
 real	0m42.357s
 user	0m39.157s
-sys	    0m2.079s
+sys 	0m2.079s
 
 3DES Total
 
 real	1m26.153s
 user	1m18.972s
-sys	    0m4.405s
+sys 	0m4.405s
 
 AES-128 Encryption
 
 real	0m5.158s
 user	0m2.071s
-sys	    0m1.889s
+sys 	0m1.889s
 
 AES-128 Decryption
 
 real	0m4.610s
 user	0m0.858s
-sys	    0m1.913s
+sys 	0m1.913s
 
 AES-128 Total
 
 real	0m9.679s
 user	0m2.949s
-sys	    0m3.857s
+sys 	0m3.857s
 
 IDEA Encryption
 
 real	0m16.199s
 user	0m12.710s
-sys	    0m2.071s
+sys 	0m2.071s
 
 IDEA Decryption
 
 real	0m15.285s
 user	0m12.005s
-sys	    0m2.177s
+sys 	0m2.177s
 
 IDEA Total
 
 real	0m31.202s
 user	0m24.840s
-sys	    0m4.256s
+sys 	0m4.256s
 
 SM4 Encryption
 
 real	0m14.580s
 user	0m11.490s
-sys	    0m2.050s
+sys 	0m2.050s
 
 SM4 Decryption
 
 real	0m13.979s
 user	0m10.965s
-sys	    0m2.020s
+sys 	0m2.020s
 
 SM4 Total
 
 real	0m29.145s
 user	0m22.644s
-sys	    0m4.270s
+sys 	0m4.270s
 ```
 
 ## Asymmetric Encryption Algorithm
@@ -255,25 +255,25 @@ RSA Private Key Generation
 
 real	0m11.538s
 user	0m10.760s
-sys	    0m0.426s
+sys 	0m0.426s
 
 RSA Public Key Generation
 
 real	0m0.848s
 user	0m0.324s
-sys	    0m0.309s
+sys 	0m0.309s
 
 EC Private Key Generation
 
 real	0m0.877s
 user	0m0.343s
-sys	    0m0.318s
+sys 	0m0.318s
 
 EC Public Key Generation
 
 real	0m0.857s
 user	0m0.331s
-sys	    0m0.314s
+sys 	0m0.314s
 ```
 
 #### Encryption/Decryption Performance
@@ -324,25 +324,25 @@ RSA Encryption
 
 real	0m1.745s
 user	0m0.673s
-sys	    0m0.635s
+sys 	0m0.635s
 
 RSA Decryption
 
 real	0m1.996s
 user	0m0.919s
-sys	    0m0.646s
+sys 	0m0.646s
 
 RSA Total
 
 real	0m3.794s
 user	0m1.603s
-sys	    0m1.309s
+sys 	0m1.309s
 
 ECC Encryption & Decryption
 
 real	0m5.047s
 user	0m1.935s
-sys	    0m1.797s
+sys 	0m1.797s
 ```
 
 ## Hash Algorithm
@@ -372,19 +372,19 @@ MD5 Hash
 
 real	0m29.763s
 user	0m21.060s
-sys	    0m6.182s
+sys 	0m6.182s
 
 SHA-256 Hash
 
 real	0m39.433s
 user	0m30.555s
-sys	    0m6.302s
+sys 	0m6.302s
 
 SM3 Hash
 
 real	1m0.990s
 user	0m52.656s
-sys	    0m5.975s
+sys 	0m5.975s
 ```
 
 ## Reference
