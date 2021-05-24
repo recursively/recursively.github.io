@@ -202,6 +202,18 @@ user	0m22.644s
 sys 	0m4.270s
 ```
 
+#### Encryption Performance
+
+<img src="pic_1.png" width="100%" height="100%">
+
+#### Decryption Performance
+
+<img src="pic_2.png" width="100%" height="100%">
+
+#### Total Performance
+
+<img src="pic_3.png" width="100%" height="100%">
+
 ## Asymmetric Encryption Algorithm
 
 ### Public-Key Algorithm Families of Practical Relevance
