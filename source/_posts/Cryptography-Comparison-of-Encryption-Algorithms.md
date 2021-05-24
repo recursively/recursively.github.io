@@ -204,15 +204,15 @@ sys 	0m4.270s
 
 #### Encryption Performance
 
-<img src="pic_1.png" width="100%" height="100%">
+<img src="pic_1.png" width="80%" height="80%">
 
 #### Decryption Performance
 
-<img src="pic_2.png" width="100%" height="100%">
+<img src="pic_2.png" width="80%" height="80%">
 
 #### Total Performance
 
-<img src="pic_3.png" width="100%" height="100%">
+<img src="pic_3.png" width="80%" height="80%">
 
 ## Asymmetric Encryption Algorithm
 
@@ -288,6 +288,8 @@ user	0m0.331s
 sys 	0m0.314s
 ```
 
+<img src="pic_4.png" width="80%" height="80%">
+
 #### Encryption/Decryption Performance
 
 ECC has no tools for encrypting and decrypting. ECC doesn’t define these directly. Instead, ECC users use Diffie-Hellman (DH) key exchange to compute a shared secret, then communicate using that shared secret. This combination of ECC and DH is called ECDH.
@@ -357,6 +359,8 @@ user	0m1.935s
 sys 	0m1.797s
 ```
 
+<img src="pic_5.png" width="80%" height="80%">
+
 ## Hash Algorithm
 
 | Algorithm  | Length  | Conflict Probability | Safety | Performance | Copyright     |
@@ -398,6 +402,8 @@ real	1m0.990s
 user	0m52.656s
 sys 	0m5.975s
 ```
+
+<img src="pic_6.png" width="80%" height="80%">
 
 ## Reference
 
