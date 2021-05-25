@@ -405,7 +405,7 @@ sys 	0m5.975s
 
 <img src="pic_6.png" width="80%" height="80%">
 
-## Reference
+## References
 
 Christof Paar, 2010, *Understanding Cryptography*, Springer-Verlag Berlin Heidelberg
 
