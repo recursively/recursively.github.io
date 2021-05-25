@@ -361,6 +361,14 @@ sys 	0m1.797s
 
 <img src="pic_5.png" width="80%" height="80%">
 
+## Comparable Security Strengths of Symmetric Block Cipher and Asymmetric-key Algorithms
+
+| Security Strength | Symmetric Key Algorithms | FFC (DSA, DH, MQV) | IFC (RSA) | ECC (ECDSA, EdDSA, DH, MQV) |
+| :---------------: | :----------------------: | :----------------: | :-------: | :-------------------------: |
+| 128               | AES-128                  | L = 3072, N = 256  | k = 3072  | f = 256-383                 |
+| 192               | AES-192                  | L = 7680, N = 384  | k = 7680  | f = 384-511                 |
+| 256               | AES-256                  | L = 15360, N = 512 | k = 15360 | f = 512+                    |
+
 ## Hash Algorithm
 
 | Algorithm  | Length  | Conflict Probability | Safety | Performance | Copyright     |
@@ -412,3 +420,7 @@ Christof Paar, 2010, *Understanding Cryptography*, Springer-Verlag Berlin Heidel
 https://jameshfisher.com/2017/04/14/openssl-ecc/
 
 https://www.adrian.idv.hk/2018-08-07-openssl/
+
+https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf
+
+https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr1.pdf
