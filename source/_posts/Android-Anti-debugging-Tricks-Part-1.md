@@ -1,6 +1,6 @@
 ---
 title: Android Anti-debugging Tricks - Part 1
-date: 2021-05-28 15:29:53
+date: 2021-04-25 15:29:53
 categories: Reverse Engineering
 tags: [Android, anti-debugging]
 keywords: [Android, debug, anti-debugging]
