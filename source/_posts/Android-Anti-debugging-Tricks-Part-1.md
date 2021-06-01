@@ -91,7 +91,7 @@ Number: 3
 ...
 ```
 
-## Monitor TracerPid
+## Monitoring TracerPid
 
 TracerPid is a value which can reflect the status of the process at runtime. If the process is being attached to a debugger, the value of TracerPid won't be 0 or the PID of the target process. Instead, the TracerPid indicates the PID of the debugger process.
 
@@ -174,5 +174,44 @@ $ ps aux | grep 31649
 root       31649  1.3  0.8  42720 33484 pts/2    S    17:51   0:00 gdb
 ```
 
-##
+## Detecting the Ports of Debuggers
 
+## Detecting the Names of Debuggers
+
+Debuggers like *android_server*, *gdb*, *gdbserver* can be retrieved by enumerating the processes or checking the installation directories. For example:
+```shell
+$ cat /proc/33555/cmdline
+./android_server
+```
+The output shows that the IDA remote debugger is running. And we can also check the debugger installation directories such as */data/local/tmp* which stores the IDA *android_server* binary.
+
+## Detecting the Debugging Breakpoints
+
+Detecting the software breakpoints is a common anti-debugging approach which can be implemented by looping through the execution segments to detect the software breakpoint instructions.
+
+The breakpoint instructions of the related instruction sets:
+
+| Instruction Set     | Instruction                |
+| :-----------------: | :------------------------: |
+| arm_linux_arm_le    | { 0x01, 0x00, 0x9f, 0xef } |
+| arm_linux_arm_be    | { 0xef, 0x9f, 0x00, 0x01 } |
+| eabi_linux_arm_le   | { 0xf0, 0x01, 0xf0, 0xe7 } |
+| eabi_linux_arm_be   | { 0xe7, 0xf0, 0x01, 0xf0 } |
+| arm_linux_thumb_le  | { 0x01, 0xde }             |
+| arm_linux_thumb_be  | { 0xde, 0x01 }             |
+| arm_linux_thumb2_le | { 0xf0, 0xf7, 0x00, 0xa0 } |
+| arm_linux_thumb2_be | { 0xf7, 0xf0, 0xa0, 0x00 } |
+
+## Inotify Detection
+
+Under Linux, inotify can monitor file system events (open, read, delete, delete, etc.). The hardening scheme can monitor some files of apk itself through inotify. Some memory dump technologies pass /proc/pid/maps, /proc/pid/mem to achieve memory dump, so monitoring the reading and writing of these files can also play a certain anti-debugging effect.
+
+## Detecting the Time Interval or Latency of Code Execution
+
+By calculating the execution time difference of a certain part of the code to determine whether it is debugged, under the Linux kernel, the current time can be obtained by time, gettimeofday, or directly by sys call. In addition, you can also determine whether the program runs timeout by customizing the SIGALRM signal.
+
+## References
+
+https://android.googlesource.com/toolchain/gdb/+/refs/heads/master/gdb-9.2/gdb/arm-linux-tdep.c
+
+https://www.programmersought.com/article/1472621633/
