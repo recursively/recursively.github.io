@@ -93,3 +93,4 @@ Or execute the ~/.mitmproxy/mitmproxy-ca-cert.pem file to install the certificat
 After all done, you can check the proxy result to verify it's working properly.
 
 <img src="pic_1.png" width="60%" height="60%">
+
