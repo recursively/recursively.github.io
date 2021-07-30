@@ -36,9 +36,9 @@ You need to enter some information the runner requires to finish the registratio
 * Enter a description for the runner. You can change this value later in the GitLab user interface.
 * Enter the tags associated with the runner, separated by commas. You can change this value later in the GitLab user interface. Please note that if you don't want your runner's tags associated with the ones you defined in Gitlab, you can modify the configuration in the runner's setting panel.
 
-<img src="pic_1.png" width="30%" height="30%">
+<img src="pic_1.png" width="60%" height="60%">
 
-<img src="pic_2.png" width="30%" height="30%">
+<img src="pic_2.png" width="60%" height="60%">
 
 * Provide the runner executor. For most use cases, enter docker.
 * If you entered docker as your executor, you’ll be asked for the default image to be used for projects that do not define one in .gitlab-ci.yml. If you don't want the docker as the executor to pull images every time, you need to add the *pull_policy* parameter in the configuration file: */etc/gitlab-runner/config.toml*
@@ -124,11 +124,11 @@ build-job:
 ```
 You can definitely build your own images without installing packages every time, which will save a lot of building time. Now you can commit and push your project to the remote repository to trigger the CI pipeline job. You can get the build status after a while.
 
-<img src="pic_3.png" width="30%" height="30%">
+<img src="pic_3.png" width="60%" height="60%">
 
 And you can also check the build details if you will:
 
-<img src="pic_4.png" width="30%" height="30%">
+<img src="pic_4.png" width="60%" height="60%">
 
 ## Trigger A Jenkins Pipeline Separatly
 
@@ -199,6 +199,21 @@ If everything goes well, you can find that all the findings are listed on the So
 <img src="pic_9.png" width="60%" height="60%">
 
 ## Build Job & Sonar Scanner Combination
+
+To perform both cppcheck and Sonarqube scanning, you need to modify your container to include both of the tools.
+```shell
+sudo docker run -it --rm CONTAINER_ID /bin/bash
+```
+
+Install the cppcheck package in the container:
+```shell
+bash-5.1# apk add cppcheck
+```
+
+Commit your modified container from another terminal in order to perform the CI scanning task later:
+```shell
+sudo docker commit CONTAINER_ID modified/sonar-scanner-cli
+```
 
 Create the *.gitlab-ci.yml* and edit the configuration:
 
