@@ -254,7 +254,11 @@ Trigger the Gitlab CI pipeline and take a look at the status:
 
 <img src="pic_10.png" width="60%" height="60%">
 
-Furthermore, Sonarqube allows you to configure the quality gate conditions to decide what sort of code quality can pass the CI pipeline.
+Furthermore, Sonarqube allows you to configure the quality gate conditions to decide what sort of code quality can pass the CI pipeline. 
+
+In this scenario, we're gonna create the quality gate before the merge process, the merge request won't succeed if the the status of the quality gate is failed. First of all, we need to choose the checkbox below to enable the merge check.
+
+<img src="pic_15.png" width="60%" height="60%">
 
 Create a new quelity gate and add a reliability rating condition which decides whether passing the merge or not.
 
