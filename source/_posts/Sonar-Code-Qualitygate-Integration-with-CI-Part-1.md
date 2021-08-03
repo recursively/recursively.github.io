@@ -231,7 +231,7 @@ sonarqube-check:
     name: modified/sonar-scanner-cli:latest
     entrypoint: [""]
   variables:
-    SONAR_USER_HOME: "/home/yuhong/Documents/CI/awesome/.sonar"  # Defines the location of the analysis task cache
+    SONAR_USER_HOME: "/home/CI/awesome/.sonar"  # Defines the location of the analysis task cache
     GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
   cache:
     key: "sonar ci"
@@ -244,7 +244,7 @@ sonarqube-check:
       -Dsonar.host.url="http://172.20.1.135:9000"
       -Dsonar.login="50b94782744687df5d5b04863b6a3c2198b3361a"
 
-  allow_failure: true
+  allow_failure: false
   only:
     - merge_requests
     - master
@@ -255,6 +255,20 @@ Trigger the Gitlab CI pipeline and take a look at the status:
 <img src="pic_10.png" width="60%" height="60%">
 
 Furthermore, Sonarqube allows you to configure the quality gate conditions to decide what sort of code quality can pass the CI pipeline.
+
+Create a new quelity gate and add a reliability rating condition which decides whether passing the merge or not.
+
+<img src="pic_11.png" width="60%" height="60%">
+
+Now create a new branch and try merging this new branch into master branch, the code owner will get a notification like this:
+
+<img src="pic_12.png" width="60%" height="60%">
+
+If the code scanning failed, the merge button will be in red. And you can find that the pipeline failed because it did not pass the quality gate.
+
+<img src="pic_13.png" width="60%" height="60%">
+
+<img src="pic_14.png" width="60%" height="60%">
 
 ## References
 
