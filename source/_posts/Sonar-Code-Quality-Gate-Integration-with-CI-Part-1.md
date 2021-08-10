@@ -132,7 +132,7 @@ And you can also check the build details if you will:
 
 ## Trigger A Jenkins Pipeline Separatly
 
-The Jenkins pipeline task is mentioned in another post: 
+The Jenkins pipeline task is mentioned in another post: https://recursively.review/2021/08/04/Sonar-Code-Quality-Gate-Integration-with-CI-Part-2/
 
 ## Trigger A Sonar Scanning Task Separatly
 
@@ -270,7 +270,7 @@ Now create a new branch and try merging this new branch into master branch, the 
 
 If the code scanning failed, the merge button will be in red. And you can find that the pipeline failed because it did not pass the quality gate.
 
-<img src="pic_13.png" width="100%" height="100%">
+<img src="pic_13.png" width="60%" height="60%">
 
 <img src="pic_14.png" width="100%" height="100%">
 

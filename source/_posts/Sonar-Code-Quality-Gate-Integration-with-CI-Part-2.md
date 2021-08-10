@@ -88,7 +88,7 @@ pipeline {
 
 Take a look at the Jenkins building dashboard to check the status.
 
-<img src="pic_7.png" width="100%" height="100%">
+<img src="pic_7.png" width="60%" height="60%">
 
 Now that we have scanned our project successfully with cppcheck, it will not be difficult to integrate the Sonarqube in order to establish our quality gate. Before that, we need to install the Sonar-scanner plugin in Jenkins. When the installation is finished, go to **Manage Jenkins > Configure System** and scroll down to the **SonarQube servers** section. Click the **Add SonarQube** button to add the new configuration.
 
@@ -171,7 +171,7 @@ pipeline {
 ```
 Now that we have finished setting up the configuration regardingly. If we push our changes to the remote repository the CI quality gate check process will take effect.
 
-<img src="pic_10.png" width="1000%" height="100%">
+<img src="pic_10.png" width="60%" height="60%">
 
 ## Merge Request Combination
 
@@ -212,11 +212,11 @@ pipeline {
 
 To check the merge request scanning status, we need to enable the option below in the Gitlab:
 
-<img src="pic_11.png" width="1000%" height="100%">
+<img src="pic_11.png" width="100%" height="100%">
 
 If the merge request was triggered, the merge request status will be limited unless the CI pipeline succeeds a moment later.
 
-<img src="pic_12.png" width="1000%" height="100%">
+<img src="pic_12.png" width="100%" height="100%">
 
 ## References
 
