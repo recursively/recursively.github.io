@@ -202,7 +202,7 @@ If everything goes well, you can find that all the findings are listed on the So
 
 To perform both cppcheck and Sonarqube scanning, you need to modify your container to include both of the tools.
 ```shell
-sudo docker run -it --rm CONTAINER_ID /bin/bash
+sudo docker run -it --rm IMAGE_ID /bin/bash
 ```
 
 Install the cppcheck package in the container:
