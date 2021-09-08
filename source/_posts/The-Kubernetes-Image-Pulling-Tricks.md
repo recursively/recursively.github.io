@@ -140,7 +140,8 @@ docker image push registry-host:6000/myadmin/rhel-httpd:latest
 
 Commonly we get all the images kept on the registry by using the v2 api:
 ```shell
-curl -XGET https://localhost:6000/v2/_catalog -u name:password
+curl -XGET https://localhost:6000/v2/_catalog -u name:password --insecure
+curl -XGET https://localhost:6000/v2/<name>/tags/list -u name:password --insecure
 ```
 We can also list all the images along with their tags with a python script:
 ```python
