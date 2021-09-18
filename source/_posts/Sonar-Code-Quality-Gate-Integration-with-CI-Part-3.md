@@ -57,3 +57,5 @@ The sonar scanner will work normally then.
 ## References
 
 http://doc.isilon.com/ECS/3.2/AdminGuide/ecs_t_certificate_generate_with_san.html
+
+https://stackoverflow.com/questions/47434877/how-to-generate-keystore-and-truststore
