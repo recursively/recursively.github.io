@@ -1,5 +1,5 @@
 ---
-title: Sonar Code Quality Gate Integration with CI Part 3
+title: Sonar Code Quality Gate Integration with CI - Part 3
 date: 2021-09-18 09:50:54
 categories: SAST
 tags: [sonarqube, sonar-scanner, Jenkins, Gitlab]
