@@ -10,7 +10,7 @@ description: This post is to solve the potential problems of sonar scanner TLS v
 
 The default sonarqube service runs as HTTP service, we're going to generate our self-signed certificate. Since I've been deploying the sonarqube service through kubernetes with nginx as ingress, I just use self-signed certificate for convenience. Besides this, you can also try out the [Let's Encrypt](https://letsencrypt.org/) tool to generate the browser-recognized certificate, the nginx ingress supports this way well.
 
-The *san.cnf* configuration file is necessary for generating the certificate which will be used by the sonar scanner SSL verification procedure.
+The *san.cnf* configuration file is necessary for generating the certificate which will be used by the sonar scanner SSL verification procedure. If you want your certificates to support Subject Alternative Names (SANs), you must define the alternative names in a configuration file.
 
 ```ini
 [req]
@@ -53,3 +53,7 @@ export SONAR_SCANNER_OPTS="-Djavax.net.ssl.trustStore=/path/truststore.jks -Djav
 ```
 
 The sonar scanner will work normally then.
+
+## References
+
+http://doc.isilon.com/ECS/3.2/AdminGuide/ecs_t_certificate_generate_with_san.html
