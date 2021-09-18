@@ -191,10 +191,44 @@ We can use the v2 api to delete a specific image:
 ```shell
 curl -XDELETE https://localhost:6000/v2/<name>/manifests/<reference> -u name:password
 ```
+
+For example:
+
+```shell
+curl -XDELETE https://localhost:6000/v2/<name>/manifests/sha256:60f2883fbfca71ff7740a6eca7bd8bd466988031dcf55093bb8ff2b26f2c5479 -u name:password --insecure
+```
+
 The name is the image name you want to delete, and the reference is the digest of the targeted image. To get the digest of a image with docker:
 ```shell
 docker image ls --digests image_name
 ```
+
+Or retrieve the digest from the registry server with command:
+
+```shell
+curl -X GET --header "Accept: application/vnd.docker.distribution.manifest.v2+json" -I 
+http://x.x.x.x:5000/v2/
+```
+
+For example:
+
+```shell
+curl -XGET --header "Accept: application/vnd.docker.distribution.manifest.v2+json" -I https://localhost:6000/v2/<name>/manifests/latest -u name:password --insecure
+```
+
+The response will be like this:
+
+```shell
+HTTP/2 200
+content-type: application/vnd.docker.distribution.manifest.v2+json
+docker-content-digest: sha256:60f2883fbfca71ff7740a6eca7bd8bd466988031dcf55093bb8ff2b26f2c5479
+docker-distribution-api-version: registry/2.0
+etag: "sha256:60f2883fbfca71ff7740a6eca7bd8bd466988031dcf55093bb8ff2b26f2c5479"
+x-content-type-options: nosniff
+content-length: 1582
+date: Sat, 18 Sep 2021 03:37:20 GMT
+```
+
 Finally, to make the deleting action take effect, you need to get into the container and execute the garbage-collection command:
 
 ```shell
