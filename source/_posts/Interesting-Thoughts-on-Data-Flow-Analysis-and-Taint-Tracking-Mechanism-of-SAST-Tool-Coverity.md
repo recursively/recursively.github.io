@@ -74,7 +74,7 @@ Time taken by analysis               : 00:00:03
 Defects/Coding rule violations found : 1 CERT INT32-C
 ```
 
-<img src="pic_1.jpeg" width="100%" height="100%">
+<img src="pic_1.png" width="100%" height="100%">
 
 I don't know why coverity doesn't idendify this kind of defect in the common checkers. Maybe it will cause some extra performance burden like memory usage. My understanding is that Coverity will introduce another placeholder to keep the value which may cause integer overflow, in our sample here is the macro *INT_MAX*. The situation will be getting more complicated within the while loop. Some changes of variables in the loop block rely on the runtime status. The scenario in this sample code is not that complicated cuz the value of variable *c* will not change as the number of cycles increases. For Coverity's analyzer, it's just enough for only calculating the sum result of macro *INT_MAX* and variable *c*, if we change the value of *c* to 0 like below:
 
@@ -289,7 +289,7 @@ Defect occurrences found       : 1 OS_CMD_INJECTION
 
 We can find that Coverity has truly detected the defect through it's data flow analysis and taint tracking process.
 
-<img src="pic_2.jpeg" width="100%" height="100%">
+<img src="pic_2.png" width="100%" height="100%">
 
 But I'm still curious what kind of method coverity use to find the problem. Let's try to modify the value from 90 to 91 in the judge clause.
 
