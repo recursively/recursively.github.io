@@ -1,5 +1,5 @@
 ---
-title: The Kubernetes Image Pulling Tricks
+title: The Kubernetes Image Pulling Modifications
 date: 2021-08-20 17:57:38
 categories: Cloud
 tags: [kubernetes, k8s]
@@ -61,9 +61,9 @@ Let's create the certificate and key file:
 
 ```
 mkdir certs && cd ./certs
-openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
+openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem -subj "/CN=example.com" -addext "subjectAltName = DNS:example.com"
 ```
-Install the certificate for your local machine:
+Install the certificate for your local machine, but it seems that docker will not refer to the Linux certificates when it connects to the registry.
 
 ```shell
 cp certs/certificate.pem /usr/local/share/ca-certificates/registry-certificate.crt
@@ -117,6 +117,43 @@ Connection test:
 
 ```shell
 curl -XGET https://localhost:6000/v2/_catalog -u reporter:58fd24d4311a742d13464373398ff3d9
+```
+
+Maybe you have to modify the image pulling credentials in your kubernetes yaml file.
+
+Create a secret named regcred:
+
+```shell
+kubectl create secret docker-registry regcred \
+  --docker-server=<your-registry-server> \
+  --docker-username=<your-name> \
+  --docker-password=<your-pword> \
+  --docker-email=<your-email>
+```
+
+And add the credential in your pod:
+
+```shell
+apiVersion: v1
+kind: Pod
+metadata:
+  name: private-reg
+spec:
+  containers:
+  - name: private-reg-container
+    image: <your-private-image>
+  imagePullSecrets:
+  - name: regcred
+```
+
+If you are using a virtual machine manager for kubernetes like kubevirt, it will be a little different:
+
+```shell
+ volumes:
+   - name: containervolume
+     containerDisk:
+       image: <your-private-image>
+       imagePullSecret: regcred
 ```
 
 ### Push Images
