@@ -46,6 +46,12 @@ openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 730 -out cert.pe
 keytool -trustcacerts -keystore truststore.jks -alias abc -import -file cert.pem
 ```
 
+You can still import other certificates as you need.
+
+```shell
+keytool -importcert -keystore /path/truststore.jks -storepass password -file ./example.com.cer
+```
+
 Set the sonar environment variables to invoke the truststore file.
 
 ```shell
