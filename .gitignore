@@ -5,3 +5,4 @@ public/
 source/_posts/.ipynb_checkpoints/
 *.swp
 .deploy_git/
+.DS_Store
