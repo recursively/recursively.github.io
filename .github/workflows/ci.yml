@@ -1,0 +1,39 @@
+name: Personal Blog CI by Github
+
+on:
+  push:
+    branches: [ hexo ]
+  pull_request:
+    branches: [ hexo ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - run: npm install hexo-deployer-git --save
+    - run: |
+        cd ./themes/Next
+        sed -i "s/hidden_client_id/${{ secrets.client_id }}/g" ./_config.yml
+        sed -i "s/hidden_client_secret/${{ secrets.client_secret }}/g" ./_config.yml
+        cd ../../
+    - run: hexo clean
+    - run: hexo generate
+    - run: |
+        git config user.name "recursively"
+        git config user.email "reindeer.zyh@gmail.com"
+        sed -i "s/gh_token/${{ secrets.REPO_TOKEN }}/g" ./_config.yml
+        hexo deploy
