@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/hive-apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/hive-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/hive-16x16.png">
+  <link rel="mask-icon" href="/images/hive.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"recursively.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="This post is to talk about proposals for the mobile proxy problem. The network traffic of mobile APPs can be generally forwarded via system proxy. But what if it doesn&#39;t work?">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Get Network Traffic of Mobile APPs">
+<meta property="og:url" content="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/index.html">
+<meta property="og:site_name" content="Mountaineer &amp; Hiker YHZ&#39;s Daily">
+<meta property="og:description" content="This post is to talk about proposals for the mobile proxy problem. The network traffic of mobile APPs can be generally forwarded via system proxy. But what if it doesn&#39;t work?">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_1.png">
+<meta property="og:image" content="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_2.png">
+<meta property="og:image" content="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_6.png">
+<meta property="og:image" content="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_7.png">
+<meta property="og:image" content="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_5.png">
+<meta property="og:image" content="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_4.png">
+<meta property="og:image" content="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_3.png">
+<meta property="og:image" content="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_8.png">
+<meta property="og:image" content="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_9.png">
+<meta property="og:image" content="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_10.png">
+<meta property="og:image" content="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_11.png">
+<meta property="article:published_time" content="2019-04-11T10:07:18.000Z">
+<meta property="article:modified_time" content="2024-01-02T04:51:03.607Z">
+<meta property="article:author" content="YHZ">
+<meta property="article:tag" content="MITM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_1.png">
+
+<link rel="canonical" href="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Get Network Traffic of Mobile APPs | Mountaineer & Hiker YHZ's Daily</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130244347-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-130244347-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c5a2712bf7c73d87374b33356ead82b0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Mountaineer & Hiker YHZ's Daily" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Mountaineer & Hiker YHZ's Daily</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">This is a personal blog along with other stuff.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-view">
+
+    <a href="/globe/" rel="section"><i class="fa fa-eye fa-fw"></i>View</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/recursively" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://recursively.github.io/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/hive.gif">
+      <meta itemprop="name" content="YHZ">
+      <meta itemprop="description" content="LEARNING, TRAVELING, ENJOYING">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mountaineer & Hiker YHZ's Daily">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Get Network Traffic of Mobile APPs
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-04-11 10:07:18" itemprop="dateCreated datePublished" datetime="2019-04-11T10:07:18+00:00">2019-04-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-01-02 04:51:03" itemprop="dateModified" datetime="2024-01-02T04:51:03+00:00">2024-01-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hacking/" itemprop="url" rel="index"><span itemprop="name">Hacking</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">This post is to talk about proposals for the mobile proxy problem. The network traffic of mobile APPs can be generally forwarded via system proxy. But what if it doesn't work?</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="About-proxies"><a href="#About-proxies" class="headerlink" title="About proxies"></a>About proxies</h2><p>Proxy is generally used to perform a man-in-the-middle attack. But not to just perform the pure MITM attack, it’s convenient to view, analyze and modify the data flow generated by the APPs with a proxy. It’s getting difficult to catch the network traffic on mobile and I’m here to talk about the proposals.</p>
+<h2 id="Methods-to-do-that"><a href="#Methods-to-do-that" class="headerlink" title="Methods to do that"></a>Methods to do that</h2><p>There are 4 methods listed below, and there are certainly other methods exist in this world, but they’re beyond the scope of this post.</p>
+<ul>
+<li><h3 id="Just-simply-use-proxy"><a href="#Just-simply-use-proxy" class="headerlink" title="Just simply use proxy"></a>Just simply use proxy</h3></li>
+</ul>
+<p>It’s simple, just get into the settings and set the proxy and port to your own server, and it’s done.</p>
+<img src="/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_1.png" width="60%" height="60%">
+
+<p>This is recommended for most users, but it doesn’t work if the APP doesn’t allow system proxy. </p>
+<ul>
+<li><h3 id="use-the-JustTrustMe-module-of-Xposed-Only-available-for-Android"><a href="#use-the-JustTrustMe-module-of-Xposed-Only-available-for-Android" class="headerlink" title="use the JustTrustMe module of Xposed(Only available for Android)"></a>use the JustTrustMe module of Xposed(Only available for Android)</h3></li>
+</ul>
+<p>Xposed is a framework used to hook functions in android and JustTrustMe is a module disables SSL certificate checking. (<a target="_blank" rel="noopener" href="https://github.com/Fuzion24/JustTrustMe">https://github.com/Fuzion24/JustTrustMe</a>)<br>It aims at solving the HTTPS proxy problem. It’s a powerful tool if you want to view the network traffic of APPs which does certificate pinning.<br>Download Xposed installer(<a target="_blank" rel="noopener" href="https://repo.xposed.info/module/de.robv.android.xposed.installer">https://repo.xposed.info/module/de.robv.android.xposed.installer</a>) and get it installed on your android device. The JustTrustMe binary can be downloaded from <a target="_blank" rel="noopener" href="https://github.com/Fuzion24/JustTrustMe/releases/latest">https://github.com/Fuzion24/JustTrustMe/releases/latest</a>, Then install it:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb install ./JustTrustMe.apk</span><br></pre></td></tr></table></figure>
+<p>You can now find that JustTrustMe exists in your Xposed modules.</p>
+<img src="/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_2.png" width="60%" height="60%">
+
+<ul>
+<li><h3 id="Setting-up-your-own-DNS-server"><a href="#Setting-up-your-own-DNS-server" class="headerlink" title="Setting up your own DNS server"></a>Setting up your own DNS server</h3></li>
+</ul>
+<p>This is a little bit tricky, it’s briefly illustrated below:</p>
+<img src="/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_6.png" width="100%" height="100%">
+
+<p>An elegant tool used here is DNSChef. (<a target="_blank" rel="noopener" href="https://github.com/iphelix/dnschef">https://github.com/iphelix/dnschef</a>) , modify the <em>dnschef.ini</em> file to adapt to your needs and configure the nameserver and the listening interface. The content changed here is the A records.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*.amazon.com=10.1.3.210</span><br></pre></td></tr></table></figure>
+
+<p>Start up a DNSChef server:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python dnschef.py --file=dnschef.ini --nameservers=8.8.8.8 --interface=127.0.0.1</span><br></pre></td></tr></table></figure>
+<p>If you’re using APPs within an android virtual machine, remember to change the nameserver of the network adapter you’re using to the loopback interface, then all the DNS requests to your machine will resend to DNSChef.</p>
+<p>Open listeners in BurpSuite:</p>
+<img src="/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_7.png" width="60%" height="60%">
+
+<p>Find out the target IP of your requested hosts so that BurpSuite can follow the DNS resolution.</p>
+<img src="/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_5.png" width="60%" height="60%">
+
+<p>Assuming that you send a request to <em><a target="_blank" rel="noopener" href="http://www.amazon.com/">www.amazon.com</a></em> you can get ordinary responses like this:</p>
+<img src="/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_4.png" width="60%" height="60%">
+
+<img src="/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_3.png" width="60%" height="60%">
+
+<img src="/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_8.png" width="60%" height="60%">
+
+<ul>
+<li><h3 id="Forward-traffic-of-the-router"><a href="#Forward-traffic-of-the-router" class="headerlink" title="Forward traffic of the router"></a>Forward traffic of the router</h3></li>
+</ul>
+<p>It just does simple traffic forwarding between devices, the problem of SSL certificate pinning should be handled by other tools.<br>If you are using a router which allows forwarding ports in GUI, that will be much easier. And you can also install firmware into your router, OpenWrt is one of the choices. OpenWrt Project is a Linux operating system targeting embedded devices and you can execute shell directives on your router with it.</p>
+<p>For ports forwarding:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">iptables -t nat -A PREROUTING -m iprange --src-range 10.1.3.1-10.1.3.253  -p tcp --dport 80 -j DNAT --to-destination 10.1.3.254:80</span><br><span class="line"></span><br><span class="line">iptables -t nat -A POSTROUTING -p tcp -d 10.1.3.254 --dport 80 -j MASQUERADE</span><br><span class="line"></span><br><span class="line">iptables -t nat -A PREROUTING -m iprange --src-range 10.1.3.1-10.1.3.253  -p tcp --dport 443 -j DNAT --to-destination 10.1.3.254:443</span><br><span class="line"></span><br><span class="line">iptables -t nat -A POSTROUTING -p tcp -d 10.1.3.254 --dport 443 -j MASQUERADE</span><br></pre></td></tr></table></figure>
+<p>This directive will forward all the network traffic of ip 10.1.3.1~10.1.3.253 at port 80, 443 to ip 10.1.3.254 at port 80, 443.</p>
+<p>Make it clear:</p>
+<img src="/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_9.png" width="100%" height="100%">
+
+<p>Open the BurpSuite listeners:</p>
+<img src="/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_10.png" width="60%" height="60%">
+
+<p>All that network traffic can be sent directly or through a proxy like mitmproxy(<a target="_blank" rel="noopener" href="https://github.com/mitmproxy/mitmproxy">https://github.com/mitmproxy/mitmproxy</a>) listened at port 9010, it’s necessary if you would like to make some changes to the packets.</p>
+<img src="/2019/04/11/Get-Network-Traffic-of-Mobile-APPs/pic_11.png" width="60%" height="60%">
+
+<h2 id="What-else"><a href="#What-else" class="headerlink" title="What else?"></a>What else?</h2><p>Those proposals mentioned above can handle almost 90% of the situations we will encounter. If it doesn’t work, some tools work at IP based network may be helpful, such as bettercap.(<a target="_blank" rel="noopener" href="https://github.com/bettercap/bettercap">https://github.com/bettercap/bettercap</a>)</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/EVE_RWISE">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MITM/" rel="tag"># MITM</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/02/12/Pointer-Manipulations-That-Should-Be-Noted/" rel="prev" title="Pointer Manipulations That Should Be Noted">
+      <i class="fa fa-chevron-left"></i> Pointer Manipulations That Should Be Noted
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/08/08/A-Quantitative-Trading-Model-with-Stock-Screener/" rel="next" title="A Quantitative Trading Model with Stock Screener">
+      A Quantitative Trading Model with Stock Screener <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#About-proxies"><span class="nav-number">1.</span> <span class="nav-text">About proxies</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Methods-to-do-that"><span class="nav-number">2.</span> <span class="nav-text">Methods to do that</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Just-simply-use-proxy"><span class="nav-number">2.1.</span> <span class="nav-text">Just simply use proxy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#use-the-JustTrustMe-module-of-Xposed-Only-available-for-Android"><span class="nav-number">2.2.</span> <span class="nav-text">use the JustTrustMe module of Xposed(Only available for Android)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Setting-up-your-own-DNS-server"><span class="nav-number">2.3.</span> <span class="nav-text">Setting up your own DNS server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Forward-traffic-of-the-router"><span class="nav-number">2.4.</span> <span class="nav-text">Forward traffic of the router</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-else"><span class="nav-number">3.</span> <span class="nav-text">What else?</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="YHZ"
+      src="/images/hive.gif">
+  <p class="site-author-name" itemprop="name">YHZ</p>
+  <div class="site-description" itemprop="description">LEARNING, TRAVELING, ENJOYING</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:recursively.z@gmail.com" title="E-Mail → mailto:recursively.z@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://t.me/EVE_RWISE" title="Telegram → https:&#x2F;&#x2F;t.me&#x2F;EVE_RWISE" rel="noopener" target="_blank"><i class="fab fa-telegram fa-fw"></i>Telegram</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heartbeat"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">YHZ</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_lines.min.js"></script>
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '95efdfd7fd6efa56b483',
+      clientSecret: '48c6d4d52267d502c9449ed5148fc5102df12362',
+      repo        : 'recursively.github.io',
+      owner       : 'recursively',
+      admin       : ['recursively'],
+      id          : '7463c27dd81ad6550b89bae40fff61f0',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

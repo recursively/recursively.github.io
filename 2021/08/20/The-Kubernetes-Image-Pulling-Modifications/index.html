@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/hive-apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/hive-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/hive-16x16.png">
+  <link rel="mask-icon" href="/images/hive.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"recursively.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="It&#39;s hard to pull some kind of kubernetes images by some reasons. So I just wrote down some approaches to deal with that tricky problem, which may save a lot of time.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Kubernetes Image Pulling Modifications">
+<meta property="og:url" content="https://recursively.github.io/2021/08/20/The-Kubernetes-Image-Pulling-Modifications/index.html">
+<meta property="og:site_name" content="Mountaineer &amp; Hiker YHZ&#39;s Daily">
+<meta property="og:description" content="It&#39;s hard to pull some kind of kubernetes images by some reasons. So I just wrote down some approaches to deal with that tricky problem, which may save a lot of time.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-08-20T17:57:38.000Z">
+<meta property="article:modified_time" content="2024-01-02T04:51:03.619Z">
+<meta property="article:author" content="YHZ">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="k8s">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://recursively.github.io/2021/08/20/The-Kubernetes-Image-Pulling-Modifications/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>The Kubernetes Image Pulling Modifications | Mountaineer & Hiker YHZ's Daily</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130244347-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-130244347-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c5a2712bf7c73d87374b33356ead82b0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Mountaineer & Hiker YHZ's Daily" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Mountaineer & Hiker YHZ's Daily</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">This is a personal blog along with other stuff.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-view">
+
+    <a href="/globe/" rel="section"><i class="fa fa-eye fa-fw"></i>View</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/recursively" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://recursively.github.io/2021/08/20/The-Kubernetes-Image-Pulling-Modifications/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/hive.gif">
+      <meta itemprop="name" content="YHZ">
+      <meta itemprop="description" content="LEARNING, TRAVELING, ENJOYING">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mountaineer & Hiker YHZ's Daily">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          The Kubernetes Image Pulling Modifications
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-08-20 17:57:38" itemprop="dateCreated datePublished" datetime="2021-08-20T17:57:38+00:00">2021-08-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-01-02 04:51:03" itemprop="dateModified" datetime="2024-01-02T04:51:03+00:00">2024-01-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Cloud/" itemprop="url" rel="index"><span itemprop="name">Cloud</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">It's hard to pull some kind of kubernetes images by some reasons. So I just wrote down some approaches to deal with that tricky problem, which may save a lot of time.</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Set-up-the-CRI-Proxy"><a href="#Set-up-the-CRI-Proxy" class="headerlink" title="Set up the CRI Proxy"></a>Set up the CRI Proxy</h2><p>Set up the proxy for the CRI(Container Runtime Interface) will solve the connection problem in most situations. Considering most of people use docker to pull the container images and docker has containerd which is also a CRI, we can create configuration files and add some parameters.</p>
+<p>Create the docker configuration file:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /etc/systemd/system/docker.service.d</span><br><span class="line">touch /etc/systemd/system/docker.service.d/http-proxy.conf</span><br></pre></td></tr></table></figure>
+<p>Modify the <em>http-proxy.conf</em> file:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[Service]</span><br><span class="line">Environment=&quot;HTTP_PROXY=http://x.x.x.x&quot;</span><br><span class="line">Environment=&quot;HTTPS_PROXY=http://x.x.x.x&quot;</span><br><span class="line">Environment=&quot;NO_PROXY=172.20.1.150&quot;</span><br></pre></td></tr></table></figure>
+
+<p>Create the containerd configuration file:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /etc/systemd/system/containerd.service.d</span><br><span class="line">touch /etc/systemd/system/containerd.service.d/http-proxy.conf</span><br></pre></td></tr></table></figure>
+<p>Modify the <em>http-proxy.conf</em> file:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[Service]</span><br><span class="line">Environment=&quot;HTTP_PROXY=http://x.x.x.x&quot;</span><br><span class="line">Environment=&quot;HTTPS_PROXY=http://x.x.x.x&quot;</span><br><span class="line">Environment=&quot;NO_PROXY=172.20.1.150&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Set-up-Private-Registry"><a href="#Set-up-Private-Registry" class="headerlink" title="Set up Private Registry"></a>Set up Private Registry</h2><p>For security concerns, it will be better to create a private registry with authentication. Here I’m going to use the basic authentication to achieve that.</p>
+<p>Create a password file with one entry for the user testuser, with password testpassword:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir auth</span><br><span class="line">docker run --rm \</span><br><span class="line">  --entrypoint htpasswd \</span><br><span class="line">  httpd:2 -Bbn testuser testpassword &gt; auth/htpasswd</span><br></pre></td></tr></table></figure>
+<p>We’re going to use the TLS channel to access the registry server, so we have to generate the certificate ourselves. Otherwise you can use the <em>insecure-registries</em> parameter to bypass the HTTPS warning. Edit the <em>daemon.json</em> file, whose default location is /etc/docker/daemon.json on Linux:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;insecure-registries&quot;</span> <span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;myregistrydomain.com:5000&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>Let’s create the certificate and key file:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir certs &amp;&amp; cd ./certs</span><br><span class="line">openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem -subj &quot;/CN=example.com&quot; -addext &quot;subjectAltName = DNS:example.com&quot;</span><br></pre></td></tr></table></figure>
+<p>Install the certificate for your local machine, but it seems that docker will not refer to the Linux certificates when it connects to the registry.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp certs/certificate.pem /usr/local/share/ca-certificates/registry-certificate.crt</span><br><span class="line">sudo update-ca-certificates</span><br></pre></td></tr></table></figure>
+<p>Now we’ve install the self-signed certificate properly. Note that if you want to enable the deleting switch which allows you to delete the images on the registry, you need to create a yaml file and edit it like this: </p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="number">0.1</span></span><br><span class="line"><span class="attr">log:</span></span><br><span class="line">  <span class="attr">fields:</span></span><br><span class="line">    <span class="attr">service:</span> <span class="string">registry</span></span><br><span class="line"><span class="attr">storage:</span></span><br><span class="line">  <span class="attr">delete:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">cache:</span></span><br><span class="line">    <span class="attr">blobdescriptor:</span> <span class="string">inmemory</span></span><br><span class="line">  <span class="attr">filesystem:</span></span><br><span class="line">    <span class="attr">rootdirectory:</span> <span class="string">/var/lib/registry</span></span><br><span class="line"><span class="attr">http:</span></span><br><span class="line">  <span class="attr">addr:</span> <span class="string">localhost:5000</span></span><br><span class="line">  <span class="attr">headers:</span></span><br><span class="line">    <span class="attr">X-Content-Type-Options:</span> [<span class="string">nosniff</span>]</span><br><span class="line"><span class="attr">health:</span></span><br><span class="line">  <span class="attr">storagedriver:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">interval:</span> <span class="string">10s</span></span><br><span class="line">    <span class="attr">threshold:</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p>Let’s start the registry with basic authentication:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name registry \</span><br><span class="line">  -v &quot;$(pwd)&quot;/config.yml:/etc/docker/registry/config.yml \</span><br><span class="line">  -v /data/registry:/var/lib/registry \</span><br><span class="line">  -v &quot;$(pwd)&quot;/auth:/auth \</span><br><span class="line">  -e &quot;REGISTRY_AUTH=htpasswd&quot; \</span><br><span class="line">  -e &quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&quot; \</span><br><span class="line">  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \</span><br><span class="line">  -v &quot;$(pwd)&quot;/certs:/certs \</span><br><span class="line">  -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \</span><br><span class="line">  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/certificate.pem \</span><br><span class="line">  -e REGISTRY_HTTP_TLS_KEY=/certs/key.pem \</span><br><span class="line">  -p 6000:443 \</span><br><span class="line">  registry</span><br></pre></td></tr></table></figure>
+
+<p>Connection test:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -XGET https://localhost:6000/v2/_catalog -u reporter:58fd24d4311a742d13464373398ff3d9</span><br></pre></td></tr></table></figure>
+
+<p>Maybe you have to modify the image pulling credentials in your kubernetes yaml file.</p>
+<p>Create a secret named regcred:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kubectl create secret docker-registry regcred \</span><br><span class="line">  --docker-server=&lt;your-registry-server&gt; \</span><br><span class="line">  --docker-username=&lt;your-name&gt; \</span><br><span class="line">  --docker-password=&lt;your-pword&gt; \</span><br><span class="line">  --docker-email=&lt;your-email&gt;</span><br></pre></td></tr></table></figure>
+
+<p>And add the credential in your pod:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: private-reg</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: private-reg-container</span><br><span class="line">    image: &lt;your-private-image&gt;</span><br><span class="line">  imagePullSecrets:</span><br><span class="line">  - name: regcred</span><br></pre></td></tr></table></figure>
+
+<p>If you are using a virtual machine manager for kubernetes like kubevirt, it will be a little different:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">volumes:</span><br><span class="line">  - name: containervolume</span><br><span class="line">    containerDisk:</span><br><span class="line">      image: &lt;your-private-image&gt;</span><br><span class="line">      imagePullSecret: regcred</span><br></pre></td></tr></table></figure>
+
+<h3 id="Push-Images"><a href="#Push-Images" class="headerlink" title="Push Images"></a>Push Images</h3><p>Since we have enabled the basic authentication, you have to execute the login command first and foremost.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker login http://172.20.1.150:6000</span><br></pre></td></tr></table></figure>
+<p>After entering your username and password, the <em>~/.docker/config.json</em> file will be generated automatically. </p>
+<p>Then you can push your images to the registry by a few commands:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker image tag rhel-httpd:latest registry-host:6000/myadmin/rhel-httpd:latest</span><br><span class="line"></span><br><span class="line">docker image push registry-host:6000/myadmin/rhel-httpd:latest</span><br></pre></td></tr></table></figure>
+
+<h3 id="Image-Deleting"><a href="#Image-Deleting" class="headerlink" title="Image Deleting"></a>Image Deleting</h3><p>Commonly we get all the images kept on the registry by using the v2 api:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -XGET https://localhost:6000/v2/_catalog -u name:password --insecure</span><br><span class="line">curl -XGET https://localhost:6000/v2/&lt;name&gt;/tags/list -u name:password --insecure</span><br></pre></td></tr></table></figure>
+<p>We can also list all the images along with their tags with a python script:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">repo_ip = <span class="string">&#x27;172.20.1.150&#x27;</span></span><br><span class="line">repo_port = <span class="number">6000</span></span><br><span class="line">auth_name = <span class="string">&#x27;name&#x27;</span></span><br><span class="line">auth_password = <span class="string">&#x27;password&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">getImagesNames</span>(<span class="params">repo_ip,repo_port</span>):</span><br><span class="line">    docker_images = []</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        url = <span class="string">&quot;https://&quot;</span> + repo_ip + <span class="string">&quot;:&quot;</span> +<span class="built_in">str</span>(repo_port) + <span class="string">&quot;/v2/_catalog&quot;</span></span><br><span class="line">        res =requests.get(url, auth=(auth_name, auth_password)).content.strip()</span><br><span class="line">        res_dic = json.loads(res)</span><br><span class="line">        images_type = res_dic[<span class="string">&#x27;repositories&#x27;</span>]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> images_type:</span><br><span class="line">            url2 = <span class="string">&quot;https://&quot;</span> + repo_ip + <span class="string">&quot;:&quot;</span> +<span class="built_in">str</span>(repo_port) +<span class="string">&quot;/v2/&quot;</span> + <span class="built_in">str</span>(i) + <span class="string">&quot;/tags/list&quot;</span></span><br><span class="line">            res2 = requests.get(url2, auth=(auth_name, auth_password)).content.strip()</span><br><span class="line">            res_dic2 = json.loads(res2)</span><br><span class="line">            name = res_dic2[<span class="string">&#x27;name&#x27;</span>]</span><br><span class="line">            tags = res_dic2[<span class="string">&#x27;tags&#x27;</span>]</span><br><span class="line">            <span class="keyword">if</span> tags:</span><br><span class="line">                <span class="keyword">for</span> tag <span class="keyword">in</span> tags:</span><br><span class="line">                    docker_name = <span class="built_in">str</span>(repo_ip) + <span class="string">&quot;:&quot;</span> + <span class="built_in">str</span>(repo_port) + <span class="string">&quot;/&quot;</span> + name + <span class="string">&quot;:&quot;</span> + tag</span><br><span class="line">                    docker_images.append(docker_name)</span><br><span class="line">                    <span class="built_in">print</span>(docker_name)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(e)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> docker_images</span><br><span class="line"></span><br><span class="line">getImagesNames(repo_ip, repo_port)</span><br></pre></td></tr></table></figure>
+<p>Run this script:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 get_image.py</span><br></pre></td></tr></table></figure>
+
+<p>We can use the v2 api to delete a specific image:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -XDELETE https://localhost:6000/v2/&lt;name&gt;/manifests/&lt;reference&gt; -u name:password</span><br></pre></td></tr></table></figure>
+
+<p>For example:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -XDELETE https://localhost:6000/v2/&lt;name&gt;/manifests/sha256:60f2883fbfca71ff7740a6eca7bd8bd466988031dcf55093bb8ff2b26f2c5479 -u name:password --insecure</span><br></pre></td></tr></table></figure>
+
+<p>The name is the image name you want to delete, and the reference is the digest of the targeted image. To get the digest of a image with docker:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image ls --digests image_name</span><br></pre></td></tr></table></figure>
+
+<p>Or retrieve the digest from the registry server with command:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -X GET --header &quot;Accept: application/vnd.docker.distribution.manifest.v2+json&quot; -I </span><br><span class="line">http://x.x.x.x:5000/v2/</span><br></pre></td></tr></table></figure>
+
+<p>For example:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -XGET --header &quot;Accept: application/vnd.docker.distribution.manifest.v2+json&quot; -I https://localhost:6000/v2/&lt;name&gt;/manifests/latest -u name:password --insecure</span><br></pre></td></tr></table></figure>
+
+<p>The response will be like this:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">HTTP/2 200</span><br><span class="line">content-type: application/vnd.docker.distribution.manifest.v2+json</span><br><span class="line">docker-content-digest: sha256:60f2883fbfca71ff7740a6eca7bd8bd466988031dcf55093bb8ff2b26f2c5479</span><br><span class="line">docker-distribution-api-version: registry/2.0</span><br><span class="line">etag: &quot;sha256:60f2883fbfca71ff7740a6eca7bd8bd466988031dcf55093bb8ff2b26f2c5479&quot;</span><br><span class="line">x-content-type-options: nosniff</span><br><span class="line">content-length: 1582</span><br><span class="line">date: Sat, 18 Sep 2021 03:37:20 GMT</span><br></pre></td></tr></table></figure>
+
+<p>Finally, to make the deleting action take effect, you need to get into the container and execute the garbage-collection command:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">registry garbage-collect /etc/docker/registry/config.yml</span><br></pre></td></tr></table></figure>
+<p>Then you can check the storage to verify:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du -chs /var/lib/registry/</span><br></pre></td></tr></table></figure>
+
+<h2 id="Using-the-Cloud-Service-Provider’s-Registry"><a href="#Using-the-Cloud-Service-Provider’s-Registry" class="headerlink" title="Using the Cloud Service Provider’s Registry"></a>Using the Cloud Service Provider’s Registry</h2><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p><a target="_blank" rel="noopener" href="https://docs.docker.com/registry/insecure/">https://docs.docker.com/registry/insecure/</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.docker.com/registry/deploying/">https://docs.docker.com/registry/deploying/</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.docker.com/registry/spec/api/">https://docs.docker.com/registry/spec/api/</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/EVE_RWISE">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+              <a href="/tags/k8s/" rel="tag"># k8s</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/04/Sonar-Code-Quality-Gate-Integration-with-CI-Part-2/" rel="prev" title="Sonar Code Quality Gate Integration with CI - Part 2">
+      <i class="fa fa-chevron-left"></i> Sonar Code Quality Gate Integration with CI - Part 2
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/18/Sonar-Code-Quality-Gate-Integration-with-CI-Part-3/" rel="next" title="Sonar Code Quality Gate Integration with CI - Part 3">
+      Sonar Code Quality Gate Integration with CI - Part 3 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Set-up-the-CRI-Proxy"><span class="nav-number">1.</span> <span class="nav-text">Set up the CRI Proxy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Set-up-Private-Registry"><span class="nav-number">2.</span> <span class="nav-text">Set up Private Registry</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Push-Images"><span class="nav-number">2.1.</span> <span class="nav-text">Push Images</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Image-Deleting"><span class="nav-number">2.2.</span> <span class="nav-text">Image Deleting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Using-the-Cloud-Service-Provider%E2%80%99s-Registry"><span class="nav-number">3.</span> <span class="nav-text">Using the Cloud Service Provider’s Registry</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">4.</span> <span class="nav-text">References</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="YHZ"
+      src="/images/hive.gif">
+  <p class="site-author-name" itemprop="name">YHZ</p>
+  <div class="site-description" itemprop="description">LEARNING, TRAVELING, ENJOYING</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:recursively.z@gmail.com" title="E-Mail → mailto:recursively.z@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://t.me/EVE_RWISE" title="Telegram → https:&#x2F;&#x2F;t.me&#x2F;EVE_RWISE" rel="noopener" target="_blank"><i class="fab fa-telegram fa-fw"></i>Telegram</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heartbeat"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">YHZ</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_lines.min.js"></script>
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '95efdfd7fd6efa56b483',
+      clientSecret: '48c6d4d52267d502c9449ed5148fc5102df12362',
+      repo        : 'recursively.github.io',
+      owner       : 'recursively',
+      admin       : ['recursively'],
+      id          : '9750ab7a07474e2e05ea8602ab599092',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

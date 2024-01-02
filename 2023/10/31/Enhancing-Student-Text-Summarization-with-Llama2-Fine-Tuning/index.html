@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/hive-apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/hive-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/hive-16x16.png">
+  <link rel="mask-icon" href="/images/hive.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"recursively.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="In this post, I explored the application of Llama2(https:&#x2F;&#x2F;ai.meta.com&#x2F;llama&#x2F;), a powerful language model, for fine-tuning on Kaggle datasets. Specifically, I focus on the task of scoring student text">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Enhancing Student Text Summarization with Llama2 Fine Tuning">
+<meta property="og:url" content="https://recursively.github.io/2023/10/31/Enhancing-Student-Text-Summarization-with-Llama2-Fine-Tuning/index.html">
+<meta property="og:site_name" content="Mountaineer &amp; Hiker YHZ&#39;s Daily">
+<meta property="og:description" content="In this post, I explored the application of Llama2(https:&#x2F;&#x2F;ai.meta.com&#x2F;llama&#x2F;), a powerful language model, for fine-tuning on Kaggle datasets. Specifically, I focus on the task of scoring student text">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://recursively.github.io/2023/10/31/Enhancing-Student-Text-Summarization-with-Llama2-Fine-Tuning/llama.png">
+<meta property="og:image" content="https://recursively.github.io/2023/10/31/Enhancing-Student-Text-Summarization-with-Llama2-Fine-Tuning/pic_1.png">
+<meta property="og:image" content="https://recursively.github.io/2023/10/31/Enhancing-Student-Text-Summarization-with-Llama2-Fine-Tuning/pic_2.png">
+<meta property="article:published_time" content="2023-10-31T10:01:21.000Z">
+<meta property="article:modified_time" content="2024-01-02T04:51:03.607Z">
+<meta property="article:author" content="YHZ">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="Llama2">
+<meta property="article:tag" content="Fine-tuning">
+<meta property="article:tag" content="kaggle">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://recursively.github.io/2023/10/31/Enhancing-Student-Text-Summarization-with-Llama2-Fine-Tuning/llama.png">
+
+<link rel="canonical" href="https://recursively.github.io/2023/10/31/Enhancing-Student-Text-Summarization-with-Llama2-Fine-Tuning/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Enhancing Student Text Summarization with Llama2 Fine Tuning | Mountaineer & Hiker YHZ's Daily</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130244347-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-130244347-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c5a2712bf7c73d87374b33356ead82b0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Mountaineer & Hiker YHZ's Daily" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Mountaineer & Hiker YHZ's Daily</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">This is a personal blog along with other stuff.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-view">
+
+    <a href="/globe/" rel="section"><i class="fa fa-eye fa-fw"></i>View</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/recursively" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://recursively.github.io/2023/10/31/Enhancing-Student-Text-Summarization-with-Llama2-Fine-Tuning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/hive.gif">
+      <meta itemprop="name" content="YHZ">
+      <meta itemprop="description" content="LEARNING, TRAVELING, ENJOYING">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mountaineer & Hiker YHZ's Daily">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Enhancing Student Text Summarization with Llama2 Fine Tuning
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-31 10:01:21" itemprop="dateCreated datePublished" datetime="2023-10-31T10:01:21+00:00">2023-10-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-01-02 04:51:03" itemprop="dateModified" datetime="2024-01-02T04:51:03+00:00">2024-01-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">In this post, I explored the application of Llama2(https://ai.meta.com/llama/), a powerful language model, for fine-tuning on Kaggle datasets. Specifically, I focus on the task of scoring student text summaries. By leveraging Llama2's capabilities, I aim to enhance the accuracy and efficiency of this task. You can even treat this post as a guideline of fine tuning Llama2 on your own dataset.</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <img src="/2023/10/31/Enhancing-Student-Text-Summarization-with-Llama2-Fine-Tuning/llama.png" width="60%" height="60%">
+
+<h2 id="Dataset-Preparation-and-Preprocessing"><a href="#Dataset-Preparation-and-Preprocessing" class="headerlink" title="Dataset Preparation and Preprocessing"></a>Dataset Preparation and Preprocessing</h2><p>For the dataset I used in this post, I chose it from the Kaggle competition: <a target="_blank" rel="noopener" href="https://www.kaggle.com/competitions/commonlit-evaluate-student-summaries/overview">https://www.kaggle.com/competitions/commonlit-evaluate-student-summaries/overview</a>. The goal of this competition is to assess the quality of summaries written by students in grades 3-12. We need to build a model that evaluates how well a student represents the main idea and details of a source text, as well as the clarity, precision, and fluency of the language used in the summary. The data can be downloaded by this link: <a target="_blank" rel="noopener" href="https://www.kaggle.com/competitions/commonlit-evaluate-student-summaries/data">https://www.kaggle.com/competitions/commonlit-evaluate-student-summaries/data</a>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">df1 = pd.read_csv(<span class="string">&quot;data/commonlit-evaluate-student-summaries/prompts_train.csv&quot;</span>)</span><br><span class="line">df2 = pd.read_csv(<span class="string">&quot;data/commonlit-evaluate-student-summaries/summaries_train.csv&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"></span><br><span class="line">merged_df = df2.merge(df1, left_on=<span class="string">&#x27;prompt_id&#x27;</span>, right_on=<span class="string">&#x27;prompt_id&#x27;</span>)</span><br><span class="line"></span><br><span class="line">merged_df = merged_df.drop(columns=[<span class="string">&#x27;student_id&#x27;</span>, <span class="string">&#x27;prompt_id&#x27;</span>])</span><br><span class="line"><span class="comment"># 9:1 for train and rest</span></span><br><span class="line">train_data, test_data = train_test_split(merged_df, test_size=<span class="number">0.1</span>, random_state=<span class="number">123456</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(train_data), <span class="string">&quot;train +&quot;</span>, <span class="built_in">len</span>(test_data), <span class="string">&quot;test&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">train_data_dict = train_data.to_dict(orient=<span class="string">&#x27;records&#x27;</span>)</span><br><span class="line">test_data_dict = test_data.to_dict(orient=<span class="string">&#x27;records&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;./data/llama2-fine-tune-input/train.json&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    json.dump(train_data_dict, f, ensure_ascii=<span class="literal">False</span>, indent=<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;./data/llama2-fine-tune-input/test.json&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    json.dump(test_data_dict, f, ensure_ascii=<span class="literal">False</span>, indent=<span class="number">4</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datasets <span class="keyword">import</span> load_dataset</span><br><span class="line"></span><br><span class="line">train_dataset = load_dataset(<span class="string">&#x27;json&#x27;</span>, data_files=<span class="string">&#x27;./data/llama2-fine-tune-input/train.json&#x27;</span>, split=<span class="string">&#x27;train&#x27;</span>)</span><br><span class="line">eval_dataset = load_dataset(<span class="string">&#x27;json&#x27;</span>, data_files=<span class="string">&#x27;./data/llama2-fine-tune-input/val.json&#x27;</span>, split=<span class="string">&#x27;train&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">formatting_func</span>(<span class="params">example</span>):</span><br><span class="line">    text = <span class="string">f&#x27;&#x27;&#x27;### Instruction:</span></span><br><span class="line"><span class="string">Below is a summary evaluation task for the summary written by students. Title is the title of the text. Text is the text students need to write summary of. Question is the question for the students to follow. Summary is the summary written by students. Score of summary contains the score of wording and score of content. Write the score of wording and score of content according to the summary written by students.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### Title:</span></span><br><span class="line"><span class="string"><span class="subst">&#123;example[<span class="string">&#x27;prompt_title&#x27;</span>]&#125;</span></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### Text:</span></span><br><span class="line"><span class="string"><span class="subst">&#123;example[<span class="string">&#x27;prompt_text&#x27;</span>]&#125;</span></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### Question:</span></span><br><span class="line"><span class="string"><span class="subst">&#123;example[<span class="string">&#x27;prompt_question&#x27;</span>]&#125;</span></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### Summary:</span></span><br><span class="line"><span class="string"><span class="subst">&#123;example[<span class="string">&#x27;text&#x27;</span>]&#125;</span></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### Score of Summary: </span></span><br><span class="line"><span class="string">Wording: <span class="subst">&#123;example[<span class="string">&#x27;wording&#x27;</span>]&#125;</span></span></span><br><span class="line"><span class="string">Content: <span class="subst">&#123;example[<span class="string">&#x27;content&#x27;</span>]&#125;</span>&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> text</span><br></pre></td></tr></table></figure>
+
+<p>Let’s take a look at the output of the formatting function.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> randrange</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(formatting_func(train_dataset[randrange(<span class="built_in">len</span>(train_dataset))]))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">### Instruction:</span><br><span class="line">Below is a summary evaluation task for the summary written by students. Title is the title of the text. Text is the text students need to write summary of. Question is the question for the students to follow. Summary is the summary written by students. Score of summary contains the score of wording and score of content. Write the score of wording and score of content according to the summary written by students.</span><br><span class="line"></span><br><span class="line">### Title:</span><br><span class="line">Egyptian Social Structure</span><br><span class="line"></span><br><span class="line">### Text:</span><br><span class="line">Egyptian society was structured like a pyramid. At the top were the gods, such as Ra, Osiris, and Isis. Egyptians believed that the gods controlled the universe. Therefore, it was important to keep them happy. They could make the Nile overflow, cause famine, or even bring death. </span><br><span class="line">The Egyptians also elevated some human beings to gods. Their leaders, called pharaohs, were believed to be gods in human form. They had absolute power over their subjects. After pharaohs died, huge stone pyramids were built as their tombs. Pharaohs were buried in chambers within the pyramids. </span><br><span class="line">Because the people of Egypt believed that their pharaohs were gods, they entrusted their rulers with many responsibilities. Protection was at the top of the list. The pharaoh directed the army in case of a foreign threat or an internal conflict. All laws were enacted at the discretion of the pharaoh. Each farmer paid taxes in the form of grains, which were stored in the pharaoh’s warehouses. This grain was used to feed the people in the event of a famine. </span><br><span class="line">The Chain of Command </span><br><span class="line">No single person could manage all these duties without assistance. The pharaoh appointed a chief minister called a vizier as a supervisor. The vizier ensured that taxes were collected. </span><br><span class="line">Working with the vizier were scribes who kept government records. These high-level employees had mastered a rare skill in ancient Egypt — they could read and write. </span><br><span class="line">Noble Aims </span><br><span class="line">Right below the pharaoh in status were powerful nobles and priests. Only nobles could hold government posts; in these positions they profited from tributes paid to the pharaoh. Priests were responsible for pleasing the gods. </span><br><span class="line">Nobles enjoyed great status and also grew wealthy from donations to the gods. All Egyptians—from pharaohs to farmers—gave gifts to the gods. </span><br><span class="line">Soldier On </span><br><span class="line">Soldiers fought in wars or quelled domestic uprisings. During long periods of peace, soldiers also supervised the peasants, farmers, and slaves who were involved in building such structures as pyramids and palaces. </span><br><span class="line">Skilled workers such as physicians and craftsmen/women made up the middle class. Craftsmen made and sold jewelry, pottery, papyrus products, tools, and other useful things. </span><br><span class="line">Naturally, there were people needed to buy goods from artisans and traders. These were the merchants and storekeepers who sold these goods to the public. </span><br><span class="line">The Bottom of the Heap </span><br><span class="line">At the bottom of the social structure were slaves and farmers. Slavery became the fate of those captured as prisoners of war. In addition to being forced to work on building projects, slaves toiled at the discretion of the pharaoh or nobles. </span><br><span class="line">Farmers tended the fields, raised animals, kept canals and reservoirs in good order, worked in the stone quarries, and built the royal monuments. Farmers paid taxes that could amount to as much as 60% of their yearly harvest—that’s a lot of hay! </span><br><span class="line">Social mobility was not impossible. A small number of peasants and farmers moved up the economic ladder. Families saved money to send their sons to village schools to learn trades. These schools were run by priests or by artisans. Boys who learned to read and write could become scribes, then go on to gain employment in the government. It was possible for a boy born on a farm to work his way up into the higher ranks of the government. Bureaucracy proved lucrative.</span><br><span class="line"></span><br><span class="line">### Question:</span><br><span class="line">In complete sentences, summarize the structure of the ancient Egyptian system of government. How were different social classes involved in this government? Cite evidence from the text.</span><br><span class="line"></span><br><span class="line">### Summary:</span><br><span class="line">The Egyptian&#x27;s system of goverment was based of the statis the people were in , Like how ,&quot;At the bottom of the socail structure were slaves and farmers.&quot; While ,&quot;Right below the pharaoh in status were powerful nobles and priests.&quot; As well as ,&quot;Only nobles could hold government posts.&quot;</span><br><span class="line"></span><br><span class="line">### Score of Summary: </span><br><span class="line">Wording: -1.38566071478225</span><br><span class="line">Content: -0.18539193846186</span><br></pre></td></tr></table></figure>
+
+<h2 id="Modeling"><a href="#Modeling" class="headerlink" title="Modeling"></a>Modeling</h2><h3 id="Load-Base-Model"><a href="#Load-Base-Model" class="headerlink" title="Load Base Model"></a>Load Base Model</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> LlamaForCausalLM, LlamaTokenizer</span><br><span class="line"><span class="keyword">from</span> datasets <span class="keyword">import</span> config</span><br><span class="line"></span><br><span class="line">config.HF_DATASETS_CACHE = <span class="string">&#x27;/data/yuhong_zhao/cache/datasets&#x27;</span></span><br><span class="line"></span><br><span class="line">model_id=<span class="string">&quot;meta-llama/Llama-2-7b-hf&quot;</span></span><br><span class="line"></span><br><span class="line">tokenizer = LlamaTokenizer.from_pretrained(</span><br><span class="line">    model_id,</span><br><span class="line">    <span class="comment"># padding_side=&quot;left&quot;,</span></span><br><span class="line">    <span class="comment"># add_eos_token=True,</span></span><br><span class="line">    <span class="comment"># add_bos_token=True,</span></span><br><span class="line">)</span><br><span class="line">tokenizer.pad_token = tokenizer.eos_token</span><br><span class="line"></span><br><span class="line">model =LlamaForCausalLM.from_pretrained(model_id, load_in_8bit=<span class="literal">True</span>, device_map=<span class="string">&#x27;auto&#x27;</span>, torch_dtype=torch.float16, cache_dir=<span class="string">&#x27;/data/yuhong_zhao/cache/transformers&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>This type of task can be appropriately handled by multiple models including common machine learning models such as logistic regression, random forest, svm, hidden Markov, as well as deep learning models such as LSTM, BERT, and GPT. However, in this post, I will focus on the application of Llama2 in order to be familiar with it and explore its capabilities.</p>
+<h3 id="Check-Base-Model"><a href="#Check-Base-Model" class="headerlink" title="Check Base Model"></a>Check Base Model</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">eval_prompt = <span class="string">&quot;&quot;&quot;### Instruction:</span></span><br><span class="line"><span class="string">Below is a summary evaluation task for the summary written by students. Title is the title of the text. Text is the text students need to write summary of. Question is the question for the students to follow. Summary is the summary written by students. Score of summary contains the score of wording and score of content. Write the score of wording and score of content according to the summary written by students.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### Title:</span></span><br><span class="line"><span class="string">Egyptian Social Structure</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### Text:</span></span><br><span class="line"><span class="string">Egyptian society was structured like a pyramid. At the top were the gods, such as Ra, Osiris, and Isis. Egyptians believed that the gods controlled the universe. Therefore, it was important to keep them happy. They could make the Nile overflow, cause famine, or even bring death. \r\nThe Egyptians also elevated some human beings to gods. Their leaders, called pharaohs, were believed to be gods in human form. They had absolute power over their subjects. After pharaohs died, huge stone pyramids were built as their tombs. Pharaohs were buried in chambers within the pyramids. \r\nBecause the people of Egypt believed that their pharaohs were gods, they entrusted their rulers with many responsibilities. Protection was at the top of the list. The pharaoh directed the army in case of a foreign threat or an internal conflict. All laws were enacted at the discretion of the pharaoh. Each farmer paid taxes in the form of grains, which were stored in the pharaoh’s warehouses. This grain was used to feed the people in the event of a famine. \r\nThe Chain of Command \r\nNo single person could manage all these duties without assistance. The pharaoh appointed a chief minister called a vizier as a supervisor. The vizier ensured that taxes were collected. \r\nWorking with the vizier were scribes who kept government records. These high-level employees had mastered a rare skill in ancient Egypt — they could read and write. \r\nNoble Aims \r\nRight below the pharaoh in status were powerful nobles and priests. Only nobles could hold government posts; in these positions they profited from tributes paid to the pharaoh. Priests were responsible for pleasing the gods. \r\nNobles enjoyed great status and also grew wealthy from donations to the gods. All Egyptians—from pharaohs to farmers—gave gifts to the gods. \r\nSoldier On \r\nSoldiers fought in wars or quelled domestic uprisings. During long periods of peace, soldiers also supervised the peasants, farmers, and slaves who were involved in building such structures as pyramids and palaces. \r\nSkilled workers such as physicians and craftsmen/women made up the middle class. Craftsmen made and sold jewelry, pottery, papyrus products, tools, and other useful things. \r\nNaturally, there were people needed to buy goods from artisans and traders. These were the merchants and storekeepers who sold these goods to the public. \r\nThe Bottom of the Heap \r\nAt the bottom of the social structure were slaves and farmers. Slavery became the fate of those captured as prisoners of war. In addition to being forced to work on building projects, slaves toiled at the discretion of the pharaoh or nobles. \r\nFarmers tended the fields, raised animals, kept canals and reservoirs in good order, worked in the stone quarries, and built the royal monuments. Farmers paid taxes that could amount to as much as 60% of their yearly harvest—that’s a lot of hay! \r\nSocial mobility was not impossible. A small number of peasants and farmers moved up the economic ladder. Families saved money to send their sons to village schools to learn trades. These schools were run by priests or by artisans. Boys who learned to read and write could become scribes, then go on to gain employment in the government. It was possible for a boy born on a farm to work his way up into the higher ranks of the government. Bureaucracy proved lucrative.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### Question:</span></span><br><span class="line"><span class="string">In complete sentences, summarize the structure of the ancient Egyptian system of government. How were different social classes involved in this government? Cite evidence from the text.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### Summary:</span></span><br><span class="line"><span class="string">The acient system of government for Egypt went like this. Social calsses went from slaves, farmers/workers, traders, preits, and kings. This was involved in government because they each had to follow rules from the pharos and if they didn&#x27;t they would have a punishment. The punishment could be Karma, or execution. Also they each had to pay the pharos taxes. ( From farmers) Priets were Also responsible for pleasing the gods and Pharos. These are reasons how government and how different social classes in government were involved during it.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### Score of Summary:</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">model_input = tokenizer(eval_prompt, return_tensors=<span class="string">&quot;pt&quot;</span>, truncation=<span class="literal">True</span>).to(<span class="string">&quot;cuda&quot;</span>)</span><br><span class="line"></span><br><span class="line">model.<span class="built_in">eval</span>()</span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    <span class="built_in">print</span>(tokenizer.decode(model.generate(**model_input, max_new_tokens=<span class="number">100</span>)[<span class="number">0</span>], skip_special_tokens=<span class="literal">True</span>))</span><br></pre></td></tr></table></figure>
+
+<p>I was surprised to find that the original base model already exhibited a good performance on this task. The output of the base model is as follows:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">### Instruction:</span><br><span class="line">Below is a summary evaluation task for the summary written by students. Title is the title of the text. Text is the text students need to write summary of. Question is the question for the students to follow. Summary is the summary written by students. Score of summary contains the score of wording and score of content. Write the score of wording and score of content according to the summary written by students.</span><br><span class="line"></span><br><span class="line">### Title:</span><br><span class="line">Egyptian Social Structure</span><br><span class="line"></span><br><span class="line">### Text:</span><br><span class="line">Egyptian society was structured like a pyramid. At the top were the gods, such as Ra, Osiris, and Isis. Egyptians believed that the gods controlled the universe. Therefore, it was important to keep them happy. They could make the Nile overflow, cause famine, or even bring death. </span><br><span class="line">The Egyptians also elevated some human beings to gods. Their leaders, called pharaohs, were believed to be gods in human form. They had absolute power over their subjects. After pharaohs died, huge stone pyramids were built as their tombs. Pharaohs were buried in chambers within the pyramids. </span><br><span class="line">Because the people of Egypt believed that their pharaohs were gods, they entrusted their rulers with many responsibilities. Protection was at the top of the list. The pharaoh directed the army in case of a foreign threat or an internal conflict. All laws were enacted at the discretion of the pharaoh. Each farmer paid taxes in the form of grains, which were stored in the pharaoh’s warehouses. This grain was used to feed the people in the event of a famine. </span><br><span class="line">The Chain of Command </span><br><span class="line">No single person could manage all these duties without assistance. The pharaoh appointed a chief minister called a vizier as a supervisor. The vizier ensured that taxes were collected. </span><br><span class="line">Working with the vizier were scribes who kept government records. These high-level employees had mastered a rare skill in ancient Egypt — they could read and write. </span><br><span class="line">Noble Aims </span><br><span class="line">Right below the pharaoh in status were powerful nobles and priests. Only nobles could hold government posts; in these positions they profited from tributes paid to the pharaoh. Priests were responsible for pleasing the gods. </span><br><span class="line">Nobles enjoyed great status and also grew wealthy from donations to the gods. All Egyptians—from pharaohs to farmers—gave gifts to the gods. </span><br><span class="line">Soldier On </span><br><span class="line">Soldiers fought in wars or quelled domestic uprisings. During long periods of peace, soldiers also supervised the peasants, farmers, and slaves who were involved in building such structures as pyramids and palaces. </span><br><span class="line">Skilled workers such as physicians and craftsmen/women made up the middle class. Craftsmen made and sold jewelry, pottery, papyrus products, tools, and other useful things. </span><br><span class="line">Naturally, there were people needed to buy goods from artisans and traders. These were the merchants and storekeepers who sold these goods to the public. </span><br><span class="line">The Bottom of the Heap </span><br><span class="line">At the bottom of the social structure were slaves and farmers. Slavery became the fate of those captured as prisoners of war. In addition to being forced to work on building projects, slaves toiled at the discretion of the pharaoh or nobles. </span><br><span class="line">Farmers tended the fields, raised animals, kept canals and reservoirs in good order, worked in the stone quarries, and built the royal monuments. Farmers paid taxes that could amount to as much as 60% of their yearly harvest—that’s a lot of hay! </span><br><span class="line">Social mobility was not impossible. A small number of peasants and farmers moved up the economic ladder. Families saved money to send their sons to village schools to learn trades. These schools were run by priests or by artisans. Boys who learned to read and write could become scribes, then go on to gain employment in the government. It was possible for a boy born on a farm to work his way up into the higher ranks of the government. Bureaucracy proved lucrative.</span><br><span class="line"></span><br><span class="line">### Question:</span><br><span class="line">In complete sentences, summarize the structure of the ancient Egyptian system of government. How were different social classes involved in this government? Cite evidence from the text.</span><br><span class="line"></span><br><span class="line">### Summary:</span><br><span class="line">The acient system of government for Egypt went like this. Social calsses went from slaves, farmers/workers, traders, preits, and kings. This was involved in government because they each had to follow rules from the pharos and if they didn&#x27;t they would have a punishment. The punishment could be Karma, or execution. Also they each had to pay the pharos taxes. ( From farmers) Priets were Also responsible for pleasing the gods and Pharos. These are reasons how government and how different social classes in government were involved during it.</span><br><span class="line"></span><br><span class="line">### Score of Summary:</span><br><span class="line">Score of wording: 6/10</span><br><span class="line">Score of content: 9/10</span><br></pre></td></tr></table></figure>
+
+<h3 id="Tokenization"><a href="#Tokenization" class="headerlink" title="Tokenization"></a>Tokenization</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">generate_and_tokenize_prompt</span>(<span class="params">prompt</span>):</span><br><span class="line">    <span class="keyword">return</span> tokenizer(formatting_func(prompt), truncation=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tokenized_train_dataset = train_dataset.<span class="built_in">map</span>(generate_and_tokenize_prompt)</span><br><span class="line">tokenized_val_dataset = eval_dataset.<span class="built_in">map</span>(generate_and_tokenize_prompt)</span><br></pre></td></tr></table></figure>
+
+<p>Let’s take a look at the tokenized dataset.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tokenized_train_dataset</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Dataset(&#123;</span><br><span class="line">    features: [&#x27;prompt_title&#x27;, &#x27;text&#x27;, &#x27;prompt_question&#x27;, &#x27;prompt_text&#x27;, &#x27;content&#x27;, &#x27;wording&#x27;, &#x27;input_ids&#x27;, &#x27;attention_mask&#x27;],</span><br><span class="line">    num_rows: 6448</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">plot_data_lengths</span>(<span class="params">tokenized_train_dataset, tokenized_val_dataset</span>):</span><br><span class="line">    lengths = [<span class="built_in">len</span>(x[<span class="string">&#x27;input_ids&#x27;</span>]) <span class="keyword">for</span> x <span class="keyword">in</span> tokenized_train_dataset]</span><br><span class="line">    lengths += [<span class="built_in">len</span>(x[<span class="string">&#x27;input_ids&#x27;</span>]) <span class="keyword">for</span> x <span class="keyword">in</span> tokenized_val_dataset]</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">len</span>(lengths))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Plotting the histogram</span></span><br><span class="line">    plt.figure(figsize=(<span class="number">10</span>, <span class="number">6</span>))</span><br><span class="line">    plt.hist(lengths, bins=<span class="number">20</span>, alpha=<span class="number">0.7</span>, color=<span class="string">&#x27;blue&#x27;</span>)</span><br><span class="line">    plt.xlabel(<span class="string">&#x27;Length of input_ids&#x27;</span>)</span><br><span class="line">    plt.ylabel(<span class="string">&#x27;Frequency&#x27;</span>)</span><br><span class="line">    plt.title(<span class="string">&#x27;Distribution of Lengths of input_ids&#x27;</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">plot_data_lengths(tokenized_train_dataset, tokenized_val_dataset)</span><br></pre></td></tr></table></figure>
+
+<img src="/2023/10/31/Enhancing-Student-Text-Summarization-with-Llama2-Fine-Tuning/pic_1.png" width="60%" height="60%">
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">max_length = <span class="number">2048</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_and_tokenize_prompt2</span>(<span class="params">prompt</span>):</span><br><span class="line">    result = tokenizer(</span><br><span class="line">        formatting_func(prompt),</span><br><span class="line">        <span class="comment"># prompt,</span></span><br><span class="line">        truncation=<span class="literal">True</span>,</span><br><span class="line">        max_length=max_length,</span><br><span class="line">        padding=<span class="string">&quot;max_length&quot;</span>,</span><br><span class="line">    )</span><br><span class="line">    result[<span class="string">&quot;labels&quot;</span>] = result[<span class="string">&quot;input_ids&quot;</span>].copy()</span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tokenized_train_dataset = train_dataset.<span class="built_in">map</span>(generate_and_tokenize_prompt2)</span><br><span class="line">tokenized_val_dataset = eval_dataset.<span class="built_in">map</span>(generate_and_tokenize_prompt2)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(tokenized_train_dataset[<span class="number">1</span>][<span class="string">&#x27;input_ids&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_data_lengths(tokenized_train_dataset, tokenized_val_dataset)</span><br></pre></td></tr></table></figure>
+
+<img src="/2023/10/31/Enhancing-Student-Text-Summarization-with-Llama2-Fine-Tuning/pic_2.png" width="60%" height="60%">
+
+<h3 id="Set-up-LoRA"><a href="#Set-up-LoRA" class="headerlink" title="Set up LoRA"></a>Set up LoRA</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> peft <span class="keyword">import</span> prepare_model_for_kbit_training</span><br><span class="line"></span><br><span class="line">model.gradient_checkpointing_enable()</span><br><span class="line">model = prepare_model_for_kbit_training(model)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">print_trainable_parameters</span>(<span class="params">model</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Prints the number of trainable parameters in the model.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    trainable_params = <span class="number">0</span></span><br><span class="line">    all_param = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> _, param <span class="keyword">in</span> model.named_parameters():</span><br><span class="line">        all_param += param.numel()</span><br><span class="line">        <span class="keyword">if</span> param.requires_grad:</span><br><span class="line">            trainable_params += param.numel()</span><br><span class="line">    <span class="built_in">print</span>(</span><br><span class="line">        <span class="string">f&quot;trainable params: <span class="subst">&#123;trainable_params&#125;</span> || all params: <span class="subst">&#123;all_param&#125;</span> || trainable%: <span class="subst">&#123;<span class="number">100</span> * trainable_params / all_param&#125;</span>&quot;</span></span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> peft <span class="keyword">import</span> LoraConfig, get_peft_model</span><br><span class="line"></span><br><span class="line">config = LoraConfig(</span><br><span class="line">    r=<span class="number">32</span>,</span><br><span class="line">    lora_alpha=<span class="number">64</span>,</span><br><span class="line">    target_modules=[</span><br><span class="line">        <span class="string">&quot;q_proj&quot;</span>,</span><br><span class="line">        <span class="string">&quot;k_proj&quot;</span>,</span><br><span class="line">        <span class="string">&quot;v_proj&quot;</span>,</span><br><span class="line">        <span class="string">&quot;o_proj&quot;</span>,</span><br><span class="line">        <span class="string">&quot;gate_proj&quot;</span>,</span><br><span class="line">        <span class="string">&quot;up_proj&quot;</span>,</span><br><span class="line">        <span class="string">&quot;down_proj&quot;</span>,</span><br><span class="line">        <span class="string">&quot;lm_head&quot;</span>,</span><br><span class="line">    ],</span><br><span class="line">    bias=<span class="string">&quot;none&quot;</span>,</span><br><span class="line">    lora_dropout=<span class="number">0.05</span>,  <span class="comment"># Conventional</span></span><br><span class="line">    task_type=<span class="string">&quot;CAUSAL_LM&quot;</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">model = get_peft_model(model, config)</span><br><span class="line">print_trainable_parameters(model)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Apply the accelerator.</span></span><br><span class="line">model = accelerator.prepare_model(model)</span><br></pre></td></tr></table></figure>
+
+<p>According to the output, we can find that the parameters fine-tuned based on LoRA only account for approximately 1% of the total model parameters.</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trainable params: 81108992 || all params: 6819524608 || trainable%: 1.1893643129442022</span><br></pre></td></tr></table></figure>
+
+<p>And find out what the model looks like.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br></pre></td><td class="code"><pre><span class="line">PeftModelForCausalLM(</span><br><span class="line">  (base_model): LoraModel(</span><br><span class="line">    (model): LlamaForCausalLM(</span><br><span class="line">      (model): LlamaModel(</span><br><span class="line">        (embed_tokens): Embedding(32000, 4096)</span><br><span class="line">        (layers): ModuleList(</span><br><span class="line">          (0-31): 32 x LlamaDecoderLayer(</span><br><span class="line">            (self_attn): LlamaAttention(</span><br><span class="line">              (q_proj): Linear8bitLt(</span><br><span class="line">                in_features=4096, out_features=4096, bias=False</span><br><span class="line">                (lora_dropout): ModuleDict(</span><br><span class="line">                  (default): Dropout(p=0.05, inplace=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_A): ModuleDict(</span><br><span class="line">                  (default): Linear(in_features=4096, out_features=32, bias=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_B): ModuleDict(</span><br><span class="line">                  (default): Linear(in_features=32, out_features=4096, bias=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_embedding_A): ParameterDict()</span><br><span class="line">                (lora_embedding_B): ParameterDict()</span><br><span class="line">              )</span><br><span class="line">              (k_proj): Linear8bitLt(</span><br><span class="line">                in_features=4096, out_features=4096, bias=False</span><br><span class="line">                (lora_dropout): ModuleDict(</span><br><span class="line">                  (default): Dropout(p=0.05, inplace=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_A): ModuleDict(</span><br><span class="line">                  (default): Linear(in_features=4096, out_features=32, bias=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_B): ModuleDict(</span><br><span class="line">                  (default): Linear(in_features=32, out_features=4096, bias=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_embedding_A): ParameterDict()</span><br><span class="line">                (lora_embedding_B): ParameterDict()</span><br><span class="line">              )</span><br><span class="line">              (v_proj): Linear8bitLt(</span><br><span class="line">                in_features=4096, out_features=4096, bias=False</span><br><span class="line">                (lora_dropout): ModuleDict(</span><br><span class="line">                  (default): Dropout(p=0.05, inplace=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_A): ModuleDict(</span><br><span class="line">                  (default): Linear(in_features=4096, out_features=32, bias=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_B): ModuleDict(</span><br><span class="line">                  (default): Linear(in_features=32, out_features=4096, bias=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_embedding_A): ParameterDict()</span><br><span class="line">                (lora_embedding_B): ParameterDict()</span><br><span class="line">              )</span><br><span class="line">              (o_proj): Linear8bitLt(</span><br><span class="line">                in_features=4096, out_features=4096, bias=False</span><br><span class="line">                (lora_dropout): ModuleDict(</span><br><span class="line">                  (default): Dropout(p=0.05, inplace=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_A): ModuleDict(</span><br><span class="line">                  (default): Linear(in_features=4096, out_features=32, bias=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_B): ModuleDict(</span><br><span class="line">                  (default): Linear(in_features=32, out_features=4096, bias=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_embedding_A): ParameterDict()</span><br><span class="line">                (lora_embedding_B): ParameterDict()</span><br><span class="line">              )</span><br><span class="line">              (rotary_emb): LlamaRotaryEmbedding()</span><br><span class="line">            )</span><br><span class="line">            (mlp): LlamaMLP(</span><br><span class="line">              (gate_proj): Linear8bitLt(</span><br><span class="line">                in_features=4096, out_features=11008, bias=False</span><br><span class="line">                (lora_dropout): ModuleDict(</span><br><span class="line">                  (default): Dropout(p=0.05, inplace=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_A): ModuleDict(</span><br><span class="line">                  (default): Linear(in_features=4096, out_features=32, bias=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_B): ModuleDict(</span><br><span class="line">                  (default): Linear(in_features=32, out_features=11008, bias=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_embedding_A): ParameterDict()</span><br><span class="line">                (lora_embedding_B): ParameterDict()</span><br><span class="line">              )</span><br><span class="line">              (up_proj): Linear8bitLt(</span><br><span class="line">                in_features=4096, out_features=11008, bias=False</span><br><span class="line">                (lora_dropout): ModuleDict(</span><br><span class="line">                  (default): Dropout(p=0.05, inplace=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_A): ModuleDict(</span><br><span class="line">                  (default): Linear(in_features=4096, out_features=32, bias=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_B): ModuleDict(</span><br><span class="line">                  (default): Linear(in_features=32, out_features=11008, bias=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_embedding_A): ParameterDict()</span><br><span class="line">                (lora_embedding_B): ParameterDict()</span><br><span class="line">              )</span><br><span class="line">              (down_proj): Linear8bitLt(</span><br><span class="line">                in_features=11008, out_features=4096, bias=False</span><br><span class="line">                (lora_dropout): ModuleDict(</span><br><span class="line">                  (default): Dropout(p=0.05, inplace=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_A): ModuleDict(</span><br><span class="line">                  (default): Linear(in_features=11008, out_features=32, bias=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_B): ModuleDict(</span><br><span class="line">                  (default): Linear(in_features=32, out_features=4096, bias=False)</span><br><span class="line">                )</span><br><span class="line">                (lora_embedding_A): ParameterDict()</span><br><span class="line">                (lora_embedding_B): ParameterDict()</span><br><span class="line">              )</span><br><span class="line">              (act_fn): SiLUActivation()</span><br><span class="line">            )</span><br><span class="line">            (input_layernorm): LlamaRMSNorm()</span><br><span class="line">            (post_attention_layernorm): LlamaRMSNorm()</span><br><span class="line">          )</span><br><span class="line">        )</span><br><span class="line">        (norm): LlamaRMSNorm()</span><br><span class="line">      )</span><br><span class="line">      (lm_head): Linear(</span><br><span class="line">        in_features=4096, out_features=32000, bias=False</span><br><span class="line">        (lora_dropout): ModuleDict(</span><br><span class="line">          (default): Dropout(p=0.05, inplace=False)</span><br><span class="line">        )</span><br><span class="line">        (lora_A): ModuleDict(</span><br><span class="line">          (default): Linear(in_features=4096, out_features=32, bias=False)</span><br><span class="line">        )</span><br><span class="line">        (lora_B): ModuleDict(</span><br><span class="line">          (default): Linear(in_features=32, out_features=32000, bias=False)</span><br><span class="line">        )</span><br><span class="line">        (lora_embedding_A): ParameterDict()</span><br><span class="line">        (lora_embedding_B): ParameterDict()</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> torch.cuda.device_count() &gt; <span class="number">1</span>: <span class="comment"># If more than 1 GPU</span></span><br><span class="line">    model.is_parallelizable = <span class="literal">True</span></span><br><span class="line">    model.model_parallel = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> transformers</span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">project = <span class="string">&quot;summary-evaluate-finetune&quot;</span></span><br><span class="line">base_model_name = <span class="string">&quot;llama2-7b&quot;</span></span><br><span class="line">run_name = base_model_name + <span class="string">&quot;-&quot;</span> + project</span><br><span class="line">output_dir = <span class="string">&quot;./tmp/llama-output/&quot;</span> + run_name</span><br><span class="line"></span><br><span class="line">tokenizer.pad_token = tokenizer.eos_token</span><br><span class="line"></span><br><span class="line">trainer = transformers.Trainer(</span><br><span class="line">    model=model,</span><br><span class="line">    train_dataset=tokenized_train_dataset,</span><br><span class="line">    eval_dataset=tokenized_val_dataset,</span><br><span class="line">    args=transformers.TrainingArguments(</span><br><span class="line">        output_dir=output_dir,</span><br><span class="line">        warmup_steps=<span class="number">1</span>,</span><br><span class="line">        per_device_train_batch_size=<span class="number">2</span>,</span><br><span class="line">        gradient_accumulation_steps=<span class="number">1</span>,</span><br><span class="line">        max_steps=<span class="number">500</span>,</span><br><span class="line">        learning_rate=<span class="number">2.5e-5</span>, <span class="comment"># Want a small lr for finetuning</span></span><br><span class="line">        bf16=<span class="literal">True</span>,</span><br><span class="line">        optim=<span class="string">&quot;paged_adamw_8bit&quot;</span>,</span><br><span class="line">        logging_dir=<span class="string">f&quot;<span class="subst">&#123;output_dir&#125;</span>/logs&quot;</span>,</span><br><span class="line">        logging_strategy=<span class="string">&quot;steps&quot;</span>,</span><br><span class="line">        logging_steps=<span class="number">50</span>,</span><br><span class="line">        save_strategy=<span class="string">&quot;no&quot;</span>,       <span class="comment"># Save the model checkpoint every logging step</span></span><br><span class="line">        <span class="comment"># save_steps=50,                # Save checkpoints every 50 steps</span></span><br><span class="line">        evaluation_strategy=<span class="string">&quot;no&quot;</span>,</span><br><span class="line">        <span class="comment"># eval_steps=50,               # Evaluate and save checkpoints every 50 steps</span></span><br><span class="line">        do_eval=<span class="literal">True</span>,</span><br><span class="line">        <span class="comment"># report_to=&quot;wandb&quot;,</span></span><br><span class="line">        run_name=<span class="string">f&quot;<span class="subst">&#123;run_name&#125;</span>-<span class="subst">&#123;datetime.now().strftime(<span class="string">&#x27;%Y-%m-%d-%H-%M&#x27;</span>)&#125;</span>&quot;</span>          <span class="comment"># Name of the W&amp;B run</span></span><br><span class="line">    ),</span><br><span class="line">    data_collator=transformers.DataCollatorForLanguageModeling(tokenizer, mlm=<span class="literal">False</span>),</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">model.config.use_cache = <span class="literal">False</span>  <span class="comment"># silence the warnings</span></span><br><span class="line">trainer.train()</span><br></pre></td></tr></table></figure>
+
+<p>It will take around 50 minutes to finish the training on a A100 instance.</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[500/500 48:15, Epoch 0/1]</span><br><span class="line">Step	Training Loss</span><br><span class="line">50	1.355700</span><br><span class="line">100	0.447800</span><br><span class="line">150	0.198000</span><br><span class="line">200	0.190800</span><br><span class="line">250	0.188400</span><br><span class="line">300	0.196800</span><br><span class="line">350	0.181200</span><br><span class="line">400	0.193900</span><br><span class="line">450	0.196000</span><br><span class="line">500	0.189200</span><br><span class="line"></span><br><span class="line">TrainOutput(global_step=500, training_loss=0.3302964363098145, metrics=&#123;&#x27;train_runtime&#x27;: 2901.9648, &#x27;train_samples_per_second&#x27;: 0.345, &#x27;train_steps_per_second&#x27;: 0.172, &#x27;total_flos&#x27;: 8.2187705647104e+16, &#x27;train_loss&#x27;: 0.3302964363098145, &#x27;epoch&#x27;: 0.17&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>Save the model.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model.save_pretrained(output_dir)</span><br></pre></td></tr></table></figure>
+
+<p>If we want to load the model, we can use the following code.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">project = <span class="string">&quot;summary-evaluate-finetune&quot;</span></span><br><span class="line">base_model_name = <span class="string">&quot;llama2-7b&quot;</span></span><br><span class="line">run_name = base_model_name + <span class="string">&quot;-&quot;</span> + project</span><br><span class="line">output_dir = <span class="string">&quot;./tmp/llama-output/&quot;</span> + run_name</span><br><span class="line"></span><br><span class="line">model = LlamaForCausalLM.from_pretrained(output_dir, load_in_8bit=<span class="literal">True</span>, device_map=<span class="string">&#x27;auto&#x27;</span>, torch_dtype=torch.float16, cache_dir=<span class="string">&#x27;/data/yuhong_zhao/cache/transformers&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Finally, let’s take a look at the output of the fine-tuned model.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">model.<span class="built_in">eval</span>()</span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    <span class="built_in">print</span>(tokenizer.decode(model.generate(**model_input, max_new_tokens=<span class="number">100</span>)[<span class="number">0</span>], skip_special_tokens=<span class="literal">True</span>))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">### Instruction:</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">### Summary:</span><br><span class="line">The acient system of government for Egypt went like this. Social calsses went from slaves, farmers/workers, traders, preits, and kings. This was involved in government because they each had to follow rules from the pharos and if they didn&#x27;t they would have a punishment. The punishment could be Karma, or execution. Also they each had to pay the pharos taxes. ( From farmers) Priets were Also responsible for pleasing the gods and Pharos. These are reasons how government and how different social classes in government were involved during it.</span><br><span class="line"></span><br><span class="line">### Score of Summary:</span><br><span class="line">Wording: 0.808321610409875</span><br><span class="line">Content: 0.623783062239291</span><br></pre></td></tr></table></figure>
+
+<p>But the scoring results for the same summary is quite different from multiple runs. </p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">### Instruction:</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">### Summary:</span><br><span class="line">The acient system of government for Egypt went like this. Social calsses went from slaves, farmers/workers, traders, preits, and kings. This was involved in government because they each had to follow rules from the pharos and if they didn&#x27;t they would have a punishment. The punishment could be Karma, or execution. Also they each had to pay the pharos taxes. ( From farmers) Priets were Also responsible for pleasing the gods and Pharos. These are reasons how government and how different social classes in government were involved during it.</span><br><span class="line"></span><br><span class="line">### Score of Summary:</span><br><span class="line">Wording: 1.06577716284845</span><br><span class="line">Content: 1.15545814245537</span><br><span class="line"></span><br><span class="line">### Explanation:</span><br><span class="line">Wording: The wording is off because the sentence is not very clear. It is hard to understand what the author is saying. The sentence is also very long.</span><br><span class="line">Content: The content is off because the sentence is not very clear. It is</span><br></pre></td></tr></table></figure>
+
+<p>We can find that the fine-tuned model sometimes generates some redundant texts after the scoring results. But the most important problem is that the fine-tuned Llama2 model cannot deal with arithmetic operations for this kind of tasks, more specifically, the scoring results are totally random within a certain range.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/EVE_RWISE">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/Llama2/" rel="tag"># Llama2</a>
+              <a href="/tags/Fine-tuning/" rel="tag"># Fine-tuning</a>
+              <a href="/tags/kaggle/" rel="tag"># kaggle</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/13/Interesting-Thoughts-on-Data-Flow-Analysis-and-Taint-Tracking-Mechanism-of-SAST-Tool-Coverity/" rel="prev" title="Interesting Thoughts on Data Flow Analysis and Taint Tracking Mechanism of SAST Tool(Coverity)">
+      <i class="fa fa-chevron-left"></i> Interesting Thoughts on Data Flow Analysis and Taint Tracking Mechanism of SAST Tool(Coverity)
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Dataset-Preparation-and-Preprocessing"><span class="nav-number">1.</span> <span class="nav-text">Dataset Preparation and Preprocessing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Modeling"><span class="nav-number">2.</span> <span class="nav-text">Modeling</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Load-Base-Model"><span class="nav-number">2.1.</span> <span class="nav-text">Load Base Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Check-Base-Model"><span class="nav-number">2.2.</span> <span class="nav-text">Check Base Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tokenization"><span class="nav-number">2.3.</span> <span class="nav-text">Tokenization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Set-up-LoRA"><span class="nav-number">2.4.</span> <span class="nav-text">Set up LoRA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Training"><span class="nav-number">2.5.</span> <span class="nav-text">Training</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="YHZ"
+      src="/images/hive.gif">
+  <p class="site-author-name" itemprop="name">YHZ</p>
+  <div class="site-description" itemprop="description">LEARNING, TRAVELING, ENJOYING</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:recursively.z@gmail.com" title="E-Mail → mailto:recursively.z@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://t.me/EVE_RWISE" title="Telegram → https:&#x2F;&#x2F;t.me&#x2F;EVE_RWISE" rel="noopener" target="_blank"><i class="fab fa-telegram fa-fw"></i>Telegram</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heartbeat"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">YHZ</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_lines.min.js"></script>
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '95efdfd7fd6efa56b483',
+      clientSecret: '48c6d4d52267d502c9449ed5148fc5102df12362',
+      repo        : 'recursively.github.io',
+      owner       : 'recursively',
+      admin       : ['recursively'],
+      id          : 'c3f88d9bff2233b6fedd9d67e4a82210',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
